@@ -8,7 +8,6 @@ import {
 } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
 
-const LIME = "#ACEC00";
 
 /**
  * Site-wide scroll instruments: a lime progress bar along the top and a
@@ -31,8 +30,8 @@ export function ScrollHUD() {
     <>
       <motion.div
         aria-hidden
-        style={{ scaleX: bar, background: LIME }}
-        className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left"
+        style={{ scaleX: bar }}
+        className="neon-line fixed inset-x-0 top-0 z-[60] h-[3px] origin-left"
       />
       <motion.a
         href="#contact"
@@ -43,14 +42,20 @@ export function ScrollHUD() {
       >
         <motion.svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" style={{ rotate: spin }}>
           <defs>
+            <linearGradient id="hud-chrome" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#6f9f00" />
+              <stop offset="0.35" stopColor="#ecffc2" />
+              <stop offset="0.55" stopColor="#b8ff2e" />
+              <stop offset="1" stopColor="#4d7a00" />
+            </linearGradient>
             <path id="hud-circle" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
           </defs>
-          <circle cx="50" cy="50" r="49" fill="#000" stroke={LIME} strokeWidth="1" />
-          <text fill={LIME} fontSize="10.5" fontWeight="800" letterSpacing="2.4" fontFamily="Space Grotesk, sans-serif">
+          <circle cx="50" cy="50" r="49" fill="#000" stroke="url(#hud-chrome)" strokeWidth="1" />
+          <text fill="url(#hud-chrome)" fontSize="10.5" fontWeight="800" letterSpacing="2.4" fontFamily="Space Grotesk, sans-serif">
             <textPath href="#hud-circle">KEEP SCROLLING ✦ OR SAY HI ✦</textPath>
           </text>
         </motion.svg>
-        <span className="relative font-display text-sm font-black tabular-nums" style={{ color: LIME }}>
+        <span className="chrome-text relative font-display text-sm font-black tabular-nums">
           {String(pct).padStart(2, "0")}%
         </span>
       </motion.a>

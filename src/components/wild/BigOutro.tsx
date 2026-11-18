@@ -35,7 +35,7 @@ export function BigOutro() {
   let seed = 1;
 
   return (
-    <section ref={ref} className="relative h-[220vh] bg-[#ACEC00] text-black">
+    <section ref={ref} className="relative h-[220vh] chrome-surface text-black">
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-4 text-center">
         <h2 aria-label="Got an idea?" className="font-display text-[clamp(4rem,19vw,20rem)] font-black leading-[0.82] tracking-tight">
           {LINES.map((line) => (

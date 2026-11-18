@@ -41,8 +41,8 @@ const SUIT_NAME: Record<Suit, string> = {
 };
 // Black suits take the brand lime, red suits a warm coral — both read on a dark card.
 const SUIT_COLOR: Record<Suit, string> = {
-  spades: "#ACEC00",
-  clubs: "#ACEC00",
+  spades: "#B8FF2E",
+  clubs: "#B8FF2E",
   hearts: "#FF5468",
   diamonds: "#FF5468",
 };
@@ -254,6 +254,9 @@ const SCALE_STEP = 0.1;
 export function Team() {
   const n = team.length;
   const [active, setActive] = useState(0);
+  // Rotation (deg) of every card around its vertical axis: multiples of 360 show
+  // the face, odd multiples of 180 show the back. Only the active card is face up.
+  const [angles, setAngles] = useState<number[]>(() => team.map((_, i) => (i === 0 ? 0 : 180)));
   const [W, setW] = useState(BASE_W);
   const [phone, setPhone] = useState(false);
   const lockRef = useRef(false);
@@ -284,15 +287,19 @@ export function Team() {
   }, []);
 
   const goTo = useCallback(
-    (i: number) => {
+    (i: number, dir: number) => {
       if (lockRef.current || i === active) return;
       lock();
+      // Like turning a page: going forward flips right-to-left, going back left-to-right.
+      // The card leaving the middle turns face down, the arriving one turns face up.
+      const turn = dir > 0 ? -180 : 180;
+      setAngles((a) => a.map((v, k) => (k === i || k === active ? v + turn : v)));
       setActive(i);
     },
     [lock, active],
   );
   const step = useCallback(
-    (dir: number) => goTo((((active + dir) % n) + n) % n),
+    (dir: number) => goTo((((active + dir) % n) + n) % n, dir),
     [goTo, active, n],
   );
 
@@ -306,10 +313,10 @@ export function Team() {
         step(-1);
       } else if (e.key === "Home") {
         e.preventDefault();
-        goTo(0);
+        goTo(0, -1);
       } else if (e.key === "End") {
         e.preventDefault();
-        goTo(n - 1);
+        goTo(n - 1, 1);
       }
     },
     [step, goTo, n],
@@ -398,7 +405,7 @@ export function Team() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="text-2xl font-bold text-[#ACEC00]"
+              className="chrome-text text-2xl font-bold"
             >
               {String(active + 1).padStart(2, "0")}
             </motion.span>
@@ -437,9 +444,9 @@ export function Team() {
               return (
                 <div
                   key={m.name}
-                  onClick={() => (isActive ? step(1) : goTo(index))}
+                  onClick={() => (isActive ? step(1) : goTo(index, rel))}
                   aria-current={isActive ? "true" : undefined}
-                  aria-label={`${m.name}, ${RANK_NAME[m.rank]} of ${SUIT_NAME[m.suit]}`}
+                  aria-label={isActive ? `${m.name}, ${RANK_NAME[m.rank]} of ${SUIT_NAME[m.suit]}` : `Show ${m.name}`}
                   className="absolute"
                   style={{
                     left: "50%",
@@ -454,21 +461,13 @@ export function Team() {
                     fontSize: `${(W / BASE_W) * 16}px`,
                   }}
                 >
-                  {/* the card that lands in the middle lifts and turns over end-over-end */}
+                  {/* cards turn over sideways, like a page in a book */}
                   <motion.div
                     className="absolute inset-0"
                     style={{ transformStyle: "preserve-3d" }}
                     initial={false}
-                    animate={
-                      isActive
-                        ? { rotateX: 360, y: [0, -36, 0], scale: [1, 1.07, 1] }
-                        : { rotateX: 0, y: 0, scale: 1 }
-                    }
-                    transition={
-                      isActive
-                        ? { duration: FLIP_S, ease: [0.45, 0, 0.2, 1] }
-                        : { duration: 0 }
-                    }
+                    animate={{ rotateY: angles[index] }}
+                    transition={{ duration: FLIP_S, ease: [0.45, 0, 0.2, 1] }}
                   >
                     <div
                       className="absolute inset-0"
@@ -481,7 +480,7 @@ export function Team() {
                       style={{
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
-                        transform: "rotateX(180deg)",
+                        transform: "rotateY(180deg)",
                       }}
                     >
                       <CardBack />
@@ -521,14 +520,14 @@ export function Team() {
               type="button"
               onClick={() => step(-1)}
               aria-label="Previous team member"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#ACEC00] hover:bg-[#ACEC00] hover:text-black"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#B8FF2E] hover:bg-[#B8FF2E] hover:text-black"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
 
             <div className="h-1 w-40 overflow-hidden rounded-full bg-white/10 sm:w-56">
               <motion.div
-                className="h-full rounded-full bg-[#ACEC00]"
+                className="neon-line h-full rounded-full"
                 animate={{ width: `${((active + 1) / n) * 100}%` }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               />
@@ -538,7 +537,7 @@ export function Team() {
               type="button"
               onClick={() => step(1)}
               aria-label="Next team member"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#ACEC00] hover:bg-[#ACEC00] hover:text-black"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#B8FF2E] hover:bg-[#B8FF2E] hover:text-black"
             >
               <ArrowRight className="h-4 w-4" />
             </button>

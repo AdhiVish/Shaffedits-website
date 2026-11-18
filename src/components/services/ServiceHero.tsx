@@ -56,7 +56,7 @@ export function ServiceHero({ content, visual }: ServiceHeroProps) {
             <h1 className="font-display text-[clamp(2.5rem,6.5vw,5.25rem)] font-black leading-[0.98] tracking-tight">
               {content.headlinePlain}
               <br />
-              <span style={{ color: content.accent }}>{content.headlineAccent}</span>
+              <span className="chrome-text pr-[0.04em]" style={{ color: content.accent }}>{content.headlineAccent}</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
               {content.heroSupport}

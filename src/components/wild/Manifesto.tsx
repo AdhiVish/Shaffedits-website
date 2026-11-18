@@ -52,7 +52,7 @@ export function Manifesto() {
   const n = tokens.length;
 
   return (
-    <section id="about" className="relative overflow-hidden bg-[#ACEC00] px-6 pb-32 pt-24 text-black md:pb-48 md:pt-32">
+    <section id="about" className="relative overflow-hidden chrome-surface px-6 pb-32 pt-24 text-black md:pb-48 md:pt-32">
       <div className="mx-auto max-w-6xl">
         <p className="mb-10 flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.4em]">
           About / 01 <span className="font-normal normal-case tracking-normal opacity-60">(the part where we talk about ourselves)</span>
@@ -83,13 +83,15 @@ export function Manifesto() {
             <motion.div
               aria-hidden
               style={{ rotate: stickerSpin }}
-              className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-black text-center font-display text-[11px] font-black uppercase leading-tight tracking-widest text-[#ACEC00]"
+              className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-black text-center font-display text-[11px] font-black uppercase leading-tight tracking-widest"
             >
-              8+ yrs
+              <span className="chrome-text">
+            8+ yrs
               <br />
               of good
               <br />
               chaos
+            </span>
             </motion.div>
           </div>
         </div>

@@ -26,7 +26,7 @@ const IMAGES: Record<string, string> = {
 };
 
 const THEMES = [
-  "bg-[#ACEC00] text-black",
+  "chrome-bg text-black",
   "bg-white text-black",
   "bg-neutral-950 text-white ring-1 ring-white/15",
 ];
@@ -127,13 +127,13 @@ export function WildServices() {
             <h2 className="font-display text-[clamp(2.6rem,6vw,6rem)] font-black leading-[0.9] tracking-tight">
               Six disciplines.
               <br />
-              One creative <span className="font-light italic text-[#ACEC00]">engine.</span>
+              One creative <span className="chrome-text pr-[0.08em] font-light italic">engine.</span>
             </h2>
             <p className="mt-8 flex items-center gap-3 text-sm text-white/60">
               <motion.span
                 animate={{ x: [0, 12, 0] }}
                 transition={{ duration: 1.2, repeat: Infinity }}
-                className="text-2xl text-[#ACEC00]"
+                className="chrome-text text-2xl"
               >
                 →
               </motion.span>
@@ -154,7 +154,7 @@ export function WildServices() {
             <a
               href="#contact"
               data-cursor="Hi!"
-              className="mt-10 inline-flex w-fit items-center gap-3 rounded-full bg-[#ACEC00] px-8 py-4 text-sm font-bold uppercase tracking-wider text-black transition-transform hover:-rotate-3 hover:scale-105"
+              className="mt-10 inline-flex w-fit items-center gap-3 chrome-bg rounded-full px-8 py-4 text-sm font-bold uppercase tracking-wider text-black transition-transform hover:-rotate-3 hover:scale-105"
             >
               Pick one, or all <ArrowUpRight className="h-4 w-4" />
             </a>
@@ -163,7 +163,7 @@ export function WildServices() {
 
         {/* progress rail */}
         <div className="absolute bottom-6 left-6 right-6 h-px bg-white/15 md:left-16 md:right-16">
-          <motion.div style={{ scaleX: progressBar }} className="h-full origin-left bg-[#ACEC00]" />
+          <motion.div style={{ scaleX: progressBar }} className="neon-line h-full origin-left" />
         </div>
       </div>
     </section>
@@ -175,7 +175,7 @@ export function ServiceBands() {
   const words = ["Branding", "Content", "Social", "Film", "Photo", "Meta Ads", "Websites", "Strategy"];
   return (
     <section aria-hidden className="relative overflow-hidden bg-black py-20 md:py-28">
-      <div className="-rotate-[4deg] scale-110 bg-[#ACEC00] py-3 text-black">
+      <div className="-rotate-[4deg] scale-110 chrome-bg py-3 text-black">
         <VelocityMarquee baseVelocity={2.2}>
           {words.map((w) => (
             <span key={w} className="flex items-center font-display text-5xl font-black uppercase tracking-tight md:text-8xl">
@@ -190,7 +190,7 @@ export function ServiceBands() {
           {words.map((w) => (
             <span key={w} className="flex items-center font-display text-5xl font-black uppercase tracking-tight md:text-8xl">
               <span className="text-outline px-6">{w}</span>
-              <span className="text-4xl text-[#ACEC00] md:text-6xl">✱</span>
+              <span className="chrome-text text-4xl md:text-6xl">✱</span>
             </span>
           ))}
         </VelocityMarquee>

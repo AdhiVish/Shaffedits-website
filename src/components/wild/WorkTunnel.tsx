@@ -104,14 +104,14 @@ export function WorkTunnel() {
 
         <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-6 text-xs uppercase tracking-[0.3em] md:left-12 md:right-12">
           <div>
-            <div className="font-display text-4xl font-black tabular-nums tracking-tight text-[#ACEC00] md:text-6xl">
-              {String(current + 1).padStart(2, "0")}
+            <div className="font-display text-4xl font-black tabular-nums tracking-tight md:text-6xl">
+              <span className="chrome-text">{String(current + 1).padStart(2, "0")}</span>
               <span className="text-white/30">/{N}</span>
             </div>
             <div className="mt-2 text-white/70">{item.name}</div>
             <div className="text-white/40">{item.tag}</div>
           </div>
-          <a href="#archive" className="pointer-events-auto text-right text-white/60 hover:text-[#ACEC00]">
+          <a href="#archive" className="pointer-events-auto text-right text-white/60 hover:text-[#b8ff2e]">
             Skip to full archive ↓
           </a>
         </div>

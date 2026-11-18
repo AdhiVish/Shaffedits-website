@@ -6,7 +6,6 @@ import { ArrowButton } from "../ui/ArrowButton";
 import { VelocityMarquee } from "../wild/VelocityMarquee";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const LIME = "#ACEC00";
 const base = import.meta.env.BASE_URL;
 
 type Card = {
@@ -96,8 +95,7 @@ function MaskedLine({
       {words.map((w, i) => (
         <span key={w + i} className="inline-block overflow-hidden pb-[0.12em] align-bottom">
           <motion.span
-            className={"inline-block " + (i === accentIndex ? "italic font-light" : "")}
-            style={i === accentIndex ? { color: LIME } : undefined}
+            className={"inline-block " + (i === accentIndex ? "chrome-text pr-[0.08em] italic font-light" : "")}
             initial={{ y: "110%", rotate: 6 }}
             animate={{ y: "0%", rotate: 0 }}
             transition={{ duration: 1.1, delay: start + i * 0.09, ease: EASE }}
@@ -125,7 +123,7 @@ function Ribbon({ className, reverse, dark }: { className: string; reverse?: boo
     <div
       aria-hidden
       className={`absolute left-[-6%] w-[112%] ${className} ${
-        dark ? "border-y border-[#ACEC00]/60 bg-black text-[#ACEC00]" : "bg-[#ACEC00] text-black"
+        dark ? "border-y border-[#b8ff2e]/40 bg-black text-[#b8ff2e] [text-shadow:0_0_10px_rgba(184,255,46,0.35)]" : "chrome-bg text-black"
       }`}
     >
       <VelocityMarquee baseVelocity={reverse ? -2 : 2.6} innerClassName="py-2.5 md:py-3">
@@ -281,8 +279,8 @@ export function Hero() {
             className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase text-white/70"
           >
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-70" style={{ background: LIME }} />
-              <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: LIME }} />
+              <span className="chrome-bg absolute inline-flex h-full w-full animate-ping rounded-full opacity-70" />
+              <span className="chrome-bg relative inline-flex h-2 w-2 rounded-full" />
             </span>
             Creative Agency
           </motion.p>
@@ -328,8 +326,7 @@ export function Hero() {
           >
             scroll
             <motion.span
-              className="block h-8 w-px origin-top"
-              style={{ background: LIME }}
+              className="neon-line block h-8 w-px origin-top"
               animate={{ scaleY: [0, 1, 0], y: [0, 0, 16] }}
               transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -354,7 +351,7 @@ export function Hero() {
         <motion.div
           aria-hidden
           style={{ clipPath: portal }}
-          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-[#ACEC00] text-black"
+          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center chrome-surface text-black"
         >
           <motion.span style={{ rotate: starSpin }} className="absolute left-[8%] top-[14%] text-[12vw] leading-none md:text-[7vw]">
             ✦
