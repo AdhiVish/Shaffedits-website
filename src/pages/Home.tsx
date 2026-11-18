@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
 import { Portfolio } from "@/components/sections/Portfolio";
 import { Team } from "@/components/sections/Team";
+import { Socials } from "@/components/sections/Socials";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { ContactCTA } from "@/components/sections/ContactCTA";
 import { Manifesto } from "@/components/wild/Manifesto";
@@ -24,6 +25,7 @@ export default function Home() {
       <Stats />
       <WorkTunnel />
       <Portfolio />
+      <Socials />
       <Team />
       <WildClientele />
       <Testimonials />

@@ -52,8 +52,14 @@ export const GlowButton = forwardRef<HTMLButtonElement, Props>(
           </Link>
         );
       }
+      // External links (e.g. Instagram) open in a new tab.
+      const external = /^https?:\/\//.test(href);
       return (
-        <a href={href} className={base}>
+        <a
+          href={href}
+          className={base}
+          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
           {glow}
         </a>
       );
