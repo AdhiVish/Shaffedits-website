@@ -8,11 +8,11 @@ const lowerProjects = featuredWork.slice(midpoint);
 
 export function Portfolio() {
   return (
-    <section id="work" className="featured-work" aria-labelledby="featured-work-title">
+    <section id="archive" className="featured-work" aria-labelledby="featured-work-title">
       <div className="fw-heading">
         <div>
-          <p className="fw-eyebrow">Featured Work / 03</p>
-          <h2 id="featured-work-title">Selected <span>projects</span></h2>
+          <p className="fw-eyebrow">The Archive / 03b</p>
+          <h2 id="featured-work-title">Everything <span>else</span></h2>
         </div>
         <div className="fw-heading__aside">
           <p>Creative work for<br />forward-thinking brands.</p>

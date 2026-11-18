@@ -1,28 +1,33 @@
 import { Hero } from "@/components/sections/Hero";
-import { TrustMarquee } from "@/components/sections/TrustMarquee";
-import { About } from "@/components/sections/About";
-import { Services } from "@/components/sections/Services";
 import { Portfolio } from "@/components/sections/Portfolio";
 import { Team } from "@/components/sections/Team";
-import { Clientele } from "@/components/sections/Clientele";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { ContactCTA } from "@/components/sections/ContactCTA";
+import { Manifesto } from "@/components/wild/Manifesto";
+import { ServiceBands, WildServices } from "@/components/wild/WildServices";
+import { Stats } from "@/components/wild/Stats";
+import { WorkTunnel } from "@/components/wild/WorkTunnel";
+import { WildClientele } from "@/components/wild/WildClientele";
+import { BigOutro } from "@/components/wild/BigOutro";
 
 /**
- * Same section order, same components, same visuals as the original
- * single-page layout — now just the content rendered at the "/" route.
+ * The scroll-driven home page. Every section reacts to the scroll:
+ * pinned scenes, sideways tracks, a 3D tunnel and falling type.
  */
 export default function Home() {
   return (
     <>
       <Hero />
-      <TrustMarquee />
-      <About />
-      <Services />
+      <Manifesto />
+      <ServiceBands />
+      <WildServices />
+      <Stats />
+      <WorkTunnel />
       <Portfolio />
       <Team />
-      <Clientele />
+      <WildClientele />
       <Testimonials />
+      <BigOutro />
       <ContactCTA />
     </>
   );

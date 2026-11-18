@@ -15,16 +15,20 @@ export function ScrollToHash() {
   const { pathname, hash, key } = useLocation();
 
   useEffect(() => {
+    const lenis = window.__lenis;
     if (!hash) {
       // Plain route change with no hash: jump to top, like a normal new page.
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+      else window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       return;
     }
     const id = hash.replace("#", "");
     // Give the new route a frame to render before looking for the element.
     const raf = requestAnimationFrame(() => {
       const el = document.getElementById(id);
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!el) return;
+      if (lenis) lenis.scrollTo(el, { duration: 1.6 });
+      else el.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     return () => cancelAnimationFrame(raf);
   }, [pathname, hash, key]);
