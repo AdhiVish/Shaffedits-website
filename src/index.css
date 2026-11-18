@@ -59,7 +59,13 @@
   animation: chrome-sheen 5s ease-in-out infinite alternate;
   box-shadow: 0 0 10px rgba(184, 255, 46, 0.4);
 }
-@media (prefers-reduced-motion: reduce) {
+/* Performance: the sheen repaints every frame, so it only runs on elements
+   that are on screen (SheenPauser sets data-sheen-on), and never on phones —
+   there the chrome stays, just still. */
+.chrome-text, .chrome-bg, .chrome-surface, .neon-line { animation-play-state: paused; }
+[data-sheen-on].chrome-text, [data-sheen-on].chrome-bg,
+[data-sheen-on].chrome-surface, [data-sheen-on].neon-line { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce), (hover: none), (max-width: 767px) {
   .chrome-text, .chrome-bg, .chrome-surface, .neon-line { animation: none; }
 }
 
@@ -93,6 +99,10 @@ html.lenis-smooth { scroll-behavior: auto !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .grain-overlay { animation: none; }
+}
+/* A blended full-screen layer is expensive on phone GPUs — skip it there. */
+@media (hover: none), (max-width: 767px) {
+  .grain-overlay { display: none; }
 }
 
 /* Marquee */

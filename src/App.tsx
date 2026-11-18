@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SpotlightProvider } from "@/components/ui/SpotlightProvider";
 import { ScrollToHash } from "@/components/routing/ScrollToHash";
 import { SmoothScroll } from "@/components/wild/SmoothScroll";
+import { SheenPauser } from "@/components/wild/SheenPauser";
 import { Grain, ScrollHUD } from "@/components/wild/ScrollHUD";
 
 import Home from "@/pages/Home";
@@ -22,6 +23,7 @@ function App() {
     <>
       <Preloader />
       <SmoothScroll />
+      <SheenPauser />
       <ScrollHUD />
       <Grain />
       <SpotlightProvider />

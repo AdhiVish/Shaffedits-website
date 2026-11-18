@@ -17,7 +17,7 @@ export function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({
-      lerp: 0.085,
+      lerp: 0.12, // higher = catches up faster (0.085 felt floaty/slow)
       wheelMultiplier: 1,
       anchors: true,
       autoRaf: true,

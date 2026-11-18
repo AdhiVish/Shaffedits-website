@@ -188,6 +188,8 @@ export function Hero() {
     const spot = spotRef.current;
     if (!stage || !spot) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Phones/tablets have no cursor to follow — skip the loop entirely.
+    if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
 
     let tx = stage.clientWidth / 2;
     let ty = stage.clientHeight * 0.45;
@@ -199,20 +201,27 @@ export function Hero() {
       const r = stage.getBoundingClientRect();
       tx = e.clientX - r.left;
       ty = e.clientY - r.top;
+      // Wake the easing loop; it puts itself to sleep once it catches up,
+      // so nothing runs (or repaints) while the cursor is still or off the hero.
+      if (!raf) raf = requestAnimationFrame(loop);
     };
     const loop = () => {
       x += (tx - x) * 0.08;
       y += (ty - y) * 0.08;
+      if (Math.abs(tx - x) < 0.5 && Math.abs(ty - y) < 0.5) {
+        x = tx;
+        y = ty;
+        raf = 0;
+      }
       const w = stage.clientWidth || 1;
       const h = stage.clientHeight || 1;
       spot.style.setProperty("--mx", `${x}px`);
       spot.style.setProperty("--my", `${y}px`);
       stage.style.setProperty("--px", (-(x / w - 0.5) * 2).toFixed(3));
       stage.style.setProperty("--py", (-(y / h - 0.5) * 2).toFixed(3));
-      raf = requestAnimationFrame(loop);
+      if (raf) raf = requestAnimationFrame(loop);
     };
     stage.addEventListener("pointermove", onMove);
-    raf = requestAnimationFrame(loop);
     return () => {
       stage.removeEventListener("pointermove", onMove);
       cancelAnimationFrame(raf);
