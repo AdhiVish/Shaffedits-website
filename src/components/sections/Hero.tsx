@@ -9,6 +9,14 @@ import logoWhite from "@/assets/logo-white.png";
 const EASE = [0.16, 1, 0.3, 1] as const;
 const base = import.meta.env.BASE_URL;
 
+/**
+ * The entrance delays are timed to start as the first-visit preloader lifts.
+ * Coming back to the home page from another page there is no preloader, so
+ * everything plays ~1.2s sooner instead of leaving the hero empty.
+ */
+let returning = false;
+const wait = (s: number) => (returning ? Math.max(0, s - 1.2) : s);
+
 type Card = {
   src: string;
   pos: string;
@@ -56,7 +64,7 @@ function FloatingCard({ card, index, progress }: { card: Card; index: number; pr
         <motion.div
           initial={{ opacity: 0, scale: 0.4, y: 120, rotate: card.fx * -40 }}
           animate={{ opacity: card.far ? 0.5 : 1, scale: 1, y: 0, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 90, damping: 14, delay: 1.3 + index * 0.08 }}
+          transition={{ type: "spring", stiffness: 90, damping: 14, delay: wait(1.3) + index * 0.08 }}
         >
           <motion.img
             src={`${base}showcase/${card.src}.webp`}
@@ -99,7 +107,7 @@ function MaskedLine({
             className={"inline-block " + (i === accentIndex ? "chrome-text pr-[0.08em] italic font-light" : "")}
             initial={{ y: "110%", rotate: 6 }}
             animate={{ y: "0%", rotate: 0 }}
-            transition={{ duration: 1.1, delay: start + i * 0.09, ease: EASE }}
+            transition={{ duration: 1.1, delay: wait(start) + i * 0.09, ease: EASE }}
           >
             {w}
             {i < words.length - 1 ? " " : ""}
@@ -164,6 +172,16 @@ export function Hero() {
   const logoOpacity = useTransform(p, [0, 0.38], [0.07, 0.35]);
   const logoY = useTransform(p, [0.4, 1], ["0vh", "-24vh"]);
   const logoScale = useTransform(p, [0, 0.4, 1], [1, 1.06, 1.12]);
+
+  // Leaving the home page for another route: the next visit to the hero skips the preloader wait.
+  // (React's dev double-mount also unmounts once, but the URL is still the home page then.)
+  useEffect(
+    () => () => {
+      const home = base.replace(/\/$/, "");
+      if (window.location.pathname.replace(/\/$/, "") !== home) returning = true;
+    },
+    [],
+  );
 
   // Cursor spotlight + card parallax: written straight to CSS variables (no re-renders).
   useEffect(() => {
@@ -254,7 +272,7 @@ export function Hero() {
             decoding="async"
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.6, delay: 1, ease: EASE }}
+            transition={{ duration: 1.6, delay: wait(1), ease: EASE }}
             className="w-[92vw] max-w-[1500px] select-none md:w-[78vw]"
           />
         </motion.div>
@@ -275,7 +293,7 @@ export function Hero() {
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.9em" }}
             animate={{ opacity: 1, letterSpacing: "0.4em" }}
-            transition={{ duration: 1.4, delay: 1.3, ease: EASE }}
+            transition={{ duration: 1.4, delay: wait(1.3), ease: EASE }}
             className="mb-6 inline-flex items-center gap-3 text-xs font-medium uppercase text-white/70"
           >
             <span className="relative flex h-2 w-2">
@@ -294,7 +312,7 @@ export function Hero() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 2.3 }}
+              transition={{ duration: 0.7, delay: wait(2.3) }}
               className="mx-auto mt-8 max-w-2xl text-base text-white/75 md:text-lg"
             >
               Creative strategy. Exceptional storytelling. Content that performs.
@@ -302,7 +320,7 @@ export function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 2.5 }}
+              transition={{ duration: 0.7, delay: wait(2.5) }}
               className="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row"
             >
               <GlowButton as="a" href="#contact" tone="onDark">
@@ -321,7 +339,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 3.1 }}
+            transition={{ delay: wait(3.1) }}
             className="flex flex-col items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-white/50"
           >
             scroll
@@ -338,7 +356,7 @@ export function Hero() {
           aria-hidden
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 2.9, ease: EASE }}
+          transition={{ duration: 0.9, delay: wait(2.9), ease: EASE }}
           className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-32"
         >
           <motion.div style={{ y: ribbonsY }} className="absolute inset-0">

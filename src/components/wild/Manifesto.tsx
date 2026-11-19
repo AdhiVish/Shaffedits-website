@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { GlowButton } from "../ui/GlowButton";
 
 const base = import.meta.env.BASE_URL;
@@ -61,6 +63,25 @@ export function Manifesto({ page = false }: { page?: boolean }) {
       }
     >
       <div className="mx-auto max-w-6xl">
+        {page && (
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-10"
+          >
+            <Link
+              to="/"
+              aria-label="Back to the home page"
+              className="group inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em]"
+            >
+              <span className="grid size-11 place-items-center rounded-full bg-black text-[#b8ff2e] transition-transform duration-300 group-hover:-translate-x-1 group-hover:scale-105">
+                <ArrowLeft className="size-5 transition-transform duration-300 group-hover:-translate-x-0.5" />
+              </span>
+              Back
+            </Link>
+          </motion.div>
+        )}
         <p className="mb-10 flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.4em]">
           About / 01 <span className="font-normal normal-case tracking-normal opacity-60">(the part where we talk about ourselves)</span>
         </p>
