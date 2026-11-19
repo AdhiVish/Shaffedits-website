@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useTransform } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
+import { GlobalBoard } from "@/components/wild/GlobalBoard";
 
 const STATS = [
   { value: 40, suffix: "+", label: "brands trusted us" },
@@ -10,8 +11,6 @@ const STATS = [
   { value: 10000, suffix: "+", label: "hours of creative work" },
   { value: 8, suffix: "+", label: "years in the game" },
 ];
-
-const COUNTRIES = ["United States", "Russia", "Germany", "UAE", "Qatar", "Singapore", "Malaysia", "India"];
 
 function Stat({ value, suffix, label, i }: { value: number; suffix: string; label: string; i: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,9 +52,7 @@ export function Stats() {
         {STATS.map((s, i) => (
           <Stat key={s.label} {...s} i={i} />
         ))}
-        <div className="mt-14 border-t border-white/10 pt-8 text-xs uppercase tracking-[0.35em] text-white/50 md:text-sm">
-          <span className="text-white/80">Global collaborations</span>: {COUNTRIES.join(" · ")}
-        </div>
+        <GlobalBoard />
       </div>
     </section>
   );
