@@ -34,7 +34,7 @@ function App() {
       <Navbar />
       <main className="bg-black">
         {/* lets a page (e.g. About) play its exit animation before the next one mounts */}
-        <AnimatePresence mode="wait" initial={false} onExitComplete={() => !window.location.hash && scrollToTopNow()}>
+        <AnimatePresence mode="wait" onExitComplete={() => !window.location.hash && scrollToTopNow()}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
