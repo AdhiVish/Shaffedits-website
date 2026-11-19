@@ -4,6 +4,7 @@ import { useJsScroll } from "@/components/wild/useJsScroll";
 import { GlowButton } from "../ui/GlowButton";
 import { ArrowButton } from "../ui/ArrowButton";
 import { VelocityMarquee } from "../wild/VelocityMarquee";
+import logoWhite from "@/assets/logo-white.png";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const base = import.meta.env.BASE_URL;
@@ -37,10 +38,10 @@ const CARDS: Card[] = [
 
 function FloatingCard({ card, index, progress }: { card: Card; index: number; progress: MotionValue<number> }) {
   // On scroll the cards get flung out of the frame toward the viewer.
-  const x = useTransform(progress, [0, 0.5], ["0vw", `${card.fx * 42}vw`]);
-  const y = useTransform(progress, [0, 0.5], ["0vh", `${card.fy * 38}vh`]);
-  const scale = useTransform(progress, [0, 0.5], [1, card.far ? 1.6 : 2.4]);
-  const spin = useTransform(progress, [0, 0.5], [0, card.fx * 50]);
+  const x = useTransform(progress, [0, 0.7], ["0vw", `${card.fx * 42}vw`]);
+  const y = useTransform(progress, [0, 0.7], ["0vh", `${card.fy * 38}vh`]);
+  const scale = useTransform(progress, [0, 0.7], [1, card.far ? 1.6 : 2.4]);
+  const spin = useTransform(progress, [0, 0.7], [0, card.fx * 50]);
   return (
     <div
       aria-hidden
@@ -141,46 +142,28 @@ function Ribbon({ className, reverse, dark }: { className: string; reverse?: boo
   );
 }
 
-/** A word that refuses to sit still. */
-function Wobbly({ children }: { children: string }) {
-  return (
-    <span className="inline-flex">
-      {children.split("").map((c, i) => (
-        <motion.span
-          key={i}
-          className="inline-block"
-          animate={{ y: ["0%", "-12%", "0%", "8%", "0%"], rotate: [0, -6, 0, 5, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.12, ease: "easeInOut" }}
-        >
-          {c}
-        </motion.span>
-      ))}
-    </span>
-  );
-}
-
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const spotRef = useRef<HTMLDivElement>(null);
 
-  // The hero is 3+ screens tall; the stage stays pinned while you scroll through it.
+  // The hero is only a little taller than the screen: one short pinned beat, then straight on to the next section.
   const { scrollYProgress: p } = useJsScroll({ target: sectionRef, offset: ["start start", "end end"] });
 
-  const headScale = useTransform(p, [0, 0.45], [1, 0.72]);
-  const headOpacity = useTransform(p, [0.12, 0.4], [1, 0]);
-  const headBlur = useTransform(p, [0.08, 0.4], ["blur(0px)", "blur(14px)"]);
-  const line1X = useTransform(p, [0, 0.42], ["0vw", "-38vw"]);
-  const line2X = useTransform(p, [0, 0.42], ["0vw", "38vw"]);
-  const subY = useTransform(p, [0, 0.3], ["0vh", "18vh"]);
-  const ribbonsY = useTransform(p, [0, 0.3], ["0%", "160%"]);
-  const hintOpacity = useTransform(p, [0, 0.06], [1, 0]);
+  const headScale = useTransform(p, [0, 0.6], [1, 0.72]);
+  const headOpacity = useTransform(p, [0.05, 0.5], [1, 0]);
+  const headBlur = useTransform(p, [0.05, 0.5], ["blur(0px)", "blur(14px)"]);
+  const line1X = useTransform(p, [0, 0.6], ["0vw", "-38vw"]);
+  const line2X = useTransform(p, [0, 0.6], ["0vw", "38vw"]);
+  const subY = useTransform(p, [0, 0.45], ["0vh", "18vh"]);
+  const ribbonsY = useTransform(p, [0, 0.4], ["0%", "160%"]);
+  const hintOpacity = useTransform(p, [0, 0.08], [1, 0]);
 
-  // a lime portal opens and swallows the screen
-  const portal = useTransform(p, [0.36, 0.82], ["circle(0% at 50% 58%)", "circle(85% at 50% 58%)"]);
-  const weirdScale = useTransform(p, [0.36, 0.9], [3.2, 1]);
-  const weirdRotate = useTransform(p, [0.36, 0.9], [-16, -3]);
-  const starSpin = useTransform(p, [0.36, 1], [0, 280]);
+  // The dimmed Shaffedits logo behind the hero: as you scroll it brightens and rises,
+  // then carries on up the screen with the hero as the next section arrives.
+  const logoOpacity = useTransform(p, [0, 0.6], [0.07, 0.35]);
+  const logoY = useTransform(p, [0, 1], ["0vh", "-14vh"]);
+  const logoScale = useTransform(p, [0, 1], [1, 1.12]);
 
   // Cursor spotlight + card parallax: written straight to CSS variables (no re-renders).
   useEffect(() => {
@@ -229,7 +212,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="top" className="relative h-[320vh] bg-black text-white">
+    <section ref={sectionRef} id="top" className="relative h-[150vh] bg-black text-white">
       <div
         ref={stageRef}
         className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-6 pb-40 pt-36"
@@ -247,7 +230,7 @@ export function Hero() {
           transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Cursor spotlight + a fine grid that only shows under it */}
+        {/* Soft cursor spotlight */}
         <div ref={spotRef} aria-hidden className="pointer-events-none absolute inset-0">
           <div
             className="absolute inset-0"
@@ -256,17 +239,25 @@ export function Hero() {
                 "radial-gradient(440px circle at var(--mx, 50%) var(--my, 45%), rgba(172,236,0,0.13), transparent 70%)",
             }}
           />
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(172,236,0,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(172,236,0,0.16) 1px, transparent 1px)",
-              backgroundSize: "64px 64px",
-              WebkitMaskImage: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 45%), #000 0%, transparent 75%)",
-              maskImage: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 45%), #000 0%, transparent 75%)",
-            }}
-          />
         </div>
+
+        {/* Dimmed Shaffedits logo in the background */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          style={{ y: logoY, scale: logoScale, opacity: logoOpacity }}
+        >
+          <motion.img
+            src={logoWhite}
+            alt=""
+            draggable={false}
+            decoding="async"
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.6, delay: 1, ease: EASE }}
+            className="w-[92vw] max-w-[1500px] select-none md:w-[78vw]"
+          />
+        </motion.div>
 
         {CARDS.map((c, i) => (
           <FloatingCard key={c.src} card={c} index={i} progress={p} />
@@ -356,29 +347,6 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* The lime portal */}
-        <motion.div
-          aria-hidden
-          style={{ clipPath: portal }}
-          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center chrome-surface text-black"
-        >
-          <motion.span style={{ rotate: starSpin }} className="absolute left-[8%] top-[14%] text-[12vw] leading-none md:text-[7vw]">
-            ✦
-          </motion.span>
-          <motion.span style={{ rotate: starSpin }} className="absolute bottom-[12%] right-[9%] text-[16vw] leading-none md:text-[9vw]">
-            ✱
-          </motion.span>
-          <motion.div
-            style={{ scale: weirdScale, rotate: weirdRotate }}
-            className="text-center font-display text-[clamp(3.5rem,14vw,14rem)] font-black uppercase leading-[0.82] tracking-tighter"
-          >
-            <span className="block">Scroll.</span>
-            <span className="block font-light italic normal-case">it gets</span>
-            <span className="block">
-              <Wobbly>weird.</Wobbly>
-            </span>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   );
