@@ -267,16 +267,18 @@ html.lenis-smooth { scroll-behavior: auto !important; }
 .chrome-surface .ring-black { --tw-ring-color: #fff; }
 
 /* ---------- lime on blue ----------
-   The lime (#AEFF00) works as a highlight on the blue, never as a surface:
-   - words sitting on blue buttons / ribbons / accent tiles glow lime
-   - blue words on black get a thin lime outline and a soft lime glow */
+   Wherever the background is the blue accent, the text on it is lime
+   (#AEFF00) instead of white. Blue words on black stay plain blue. */
 .chrome-bg,
 .chrome-bg .text-black,
 .chrome-bg [class*="text-black"] {
   color: #aeff00;
   text-shadow: 0 0 10px rgba(174, 255, 0, 0.5);
 }
-.chrome-text {
-  -webkit-text-stroke: 0.6px rgba(174, 255, 0, 0.85);
-  filter: drop-shadow(0 0 5px rgba(174, 255, 0, 0.28));
+.chrome-surface,
+.chrome-surface .text-black {
+  color: #aeff00;
+  text-shadow: 0 0 14px rgba(174, 255, 0, 0.3);
 }
+.chrome-surface [class*="text-black"] { color: rgba(174, 255, 0, 0.75); }
+.chrome-surface .ring-black { --tw-ring-color: #aeff00; }

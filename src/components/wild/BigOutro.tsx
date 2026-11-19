@@ -21,7 +21,7 @@ function Letter({ ch, seed, progress }: { ch: string; seed: number; progress: Mo
   return (
     <motion.span
       style={{ y, rotate }}
-      whileHover={{ scaleY: 1.35, color: "#000", transition: { type: "spring", stiffness: 500, damping: 10 } }}
+      whileHover={{ scaleY: 1.35, color: "#ffffff", transition: { type: "spring", stiffness: 500, damping: 10 } }}
       className="inline-block origin-bottom"
     >
       {ch === " " ? " " : ch}
