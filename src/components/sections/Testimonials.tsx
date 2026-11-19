@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "motion/react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 // PLACEHOLDER testimonials — replace with real client quotes when available.
@@ -30,20 +30,56 @@ const items = [
   },
 ];
 
+/** How long each review stays up before the slideshow moves on. */
+const SLIDE_MS = 6000;
+
 export function Testimonials() {
   const [i, setI] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { amount: 0.4 });
+  const still = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const running = inView && !hovered && !tabHidden && !still;
+
   const next = () => setI((v) => (v + 1) % items.length);
   const prev = () => setI((v) => (v - 1 + items.length) % items.length);
   const t = items[i];
 
+  // Slideshow: move on by itself. Any change of slide (auto or arrows/dots) restarts the timer;
+  // it pauses while the review text is hovered, off screen, or when the tab is in the background.
+  // Time left on the current slide survives a pause, so it stays in step with the filling dot.
+  const left = useRef(SLIDE_MS);
+  useEffect(() => {
+    left.current = SLIDE_MS; // a new slide always gets the full time
+  }, [i]);
+  useEffect(() => {
+    if (!running) return;
+    const started = performance.now();
+    const timer = window.setTimeout(next, left.current);
+    return () => {
+      clearTimeout(timer);
+      left.current = Math.max(0, left.current - (performance.now() - started));
+    };
+  }, [i, running]);
+  useEffect(() => {
+    const on = () => setTabHidden(document.hidden);
+    document.addEventListener("visibilitychange", on);
+    return () => document.removeEventListener("visibilitychange", on);
+  }, []);
+
   return (
-    <section className="bg-black px-6 py-28 text-white md:py-40">
+    <section
+      ref={ref}
+      className="bg-black px-6 py-28 text-white md:py-40"
+    >
       <div className="mx-auto max-w-4xl text-center">
         <p className="mb-6 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
           Client Reviews / 05
         </p>
         <Quote className="mx-auto mb-8 h-10 w-10 text-white/30" strokeWidth={1.5} />
-        <div className="relative min-h-55">
+        {/* only hovering the review itself pauses it (the section fills the screen, so a resting cursor would always pause it) */}
+        <div className="relative min-h-55" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
           <AnimatePresence mode="wait">
             <motion.blockquote
               key={i}
@@ -73,9 +109,23 @@ export function Testimonials() {
               <button
                 key={idx}
                 aria-label={`Go to review ${idx + 1}`}
+                aria-current={idx === i ? "true" : undefined}
                 onClick={() => setI(idx)}
-                className={`h-1.5 rounded-full transition-all ${idx === i ? "w-8 bg-white" : "w-2 bg-white/30"}`}
-              />
+                className={`relative h-1.5 overflow-hidden rounded-full transition-all ${idx === i ? "w-10 bg-white/25" : "w-2 bg-white/30"}`}
+              >
+                {/* the active dot fills up until the next review */}
+                {idx === i && (
+                  <span
+                    key={i}
+                    className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-[#b8ff2e]"
+                    style={{
+                      animation: still ? undefined : `review-fill ${SLIDE_MS}ms linear forwards`,
+                      animationPlayState: running ? "running" : "paused",
+                      transform: still ? "scaleX(1)" : undefined,
+                    }}
+                  />
+                )}
+              </button>
             ))}
           </div>
           <button
