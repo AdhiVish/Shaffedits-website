@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useTransform } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
-import { GlobalBoard } from "@/components/wild/GlobalBoard";
+import { GlobeCollabs } from "@/components/wild/GlobeCollabs";
 
 const STATS = [
   { value: 40, suffix: "+", label: "brands trusted us" },
@@ -52,7 +52,7 @@ export function Stats() {
         {STATS.map((s, i) => (
           <Stat key={s.label} {...s} i={i} />
         ))}
-        <GlobalBoard />
+        <GlobeCollabs />
       </div>
     </section>
   );
