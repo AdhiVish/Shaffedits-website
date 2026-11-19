@@ -282,3 +282,19 @@ html.lenis-smooth { scroll-behavior: auto !important; }
 }
 .chrome-surface [class*="text-black"] { color: rgba(174, 255, 0, 0.75); }
 .chrome-surface .ring-black { --tw-ring-color: #aeff00; }
+
+/* lime satin text (e.g. the big stat numbers): same finish as .chrome-text, in lime */
+.lime-text {
+  color: #aeff00;
+  background-image: linear-gradient(105deg, #97e000 0%, #aeff00 28%, #c6ff52 44%, #b8ff22 52%, #aeff00 66%, #93da00 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: chrome-sheen 10s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce), (hover: none), (max-width: 767px) {
+  .lime-text { animation: none; }
+}
+.lime-text { animation-play-state: paused; }
+[data-sheen-on].lime-text { animation-play-state: running; }

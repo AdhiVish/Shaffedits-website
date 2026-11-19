@@ -31,12 +31,12 @@ function Stat({ value, suffix, label, i }: { value: number; suffix: string; labe
       }`}
     >
       <span className="font-display text-[clamp(3.25rem,9.5vw,8rem)] font-black leading-[0.85] tracking-tighter tabular-nums">
-        <span className="chrome-text pr-[0.04em]">
+        <span className="lime-text pr-[0.04em]">
           <motion.span>{text}</motion.span>
           {suffix}
         </span>
       </span>
-      <span className="max-w-[14ch] font-display text-lg font-medium leading-tight text-white/70 md:text-2xl">{label}</span>
+      <span className="max-w-[14ch] font-display text-lg font-medium leading-tight text-[#AEFF00]/75 md:text-2xl">{label}</span>
     </motion.div>
   );
 }

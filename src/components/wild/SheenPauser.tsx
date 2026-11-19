@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SELECTOR = ".chrome-text, .chrome-bg, .chrome-surface, .neon-line";
+const SELECTOR = ".chrome-text, .chrome-bg, .chrome-surface, .neon-line, .lime-text";
 
 /**
  * The neon-chrome sheen is a background-position animation, which the browser

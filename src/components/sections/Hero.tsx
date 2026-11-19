@@ -326,7 +326,7 @@ export function Hero() {
               transition={{ duration: 0.7, delay: wait(2.5) }}
               className="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row"
             >
-              <GlowButton as="a" href="#contact" tone="onDark">
+              <GlowButton as="a" href="#contact" tone="lime">
                 Book a Call
               </GlowButton>
               <ArrowButton as="a" href="#work" tone="onDark" label="View Our Work" />
