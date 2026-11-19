@@ -37,13 +37,13 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      {/* the full white logo, centred as the footer's sign-off */}
+      {/* the full white logo, as wide as the divider line below it */}
       <div className="mx-auto mt-14 flex max-w-6xl justify-center">
         <img
           src={logoWhite}
           alt="Shaffedits"
           loading="lazy"
-          className="h-auto w-[min(72vw,440px)] select-none"
+          className="block h-auto w-full select-none"
           draggable={false}
         />
       </div>
