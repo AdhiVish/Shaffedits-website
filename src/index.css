@@ -19,13 +19,15 @@
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
 
-/* ---------- neon chrome finish ---------- */
+/* ---------- satin accent finish ----------
+   A soft semi-gloss: the accent with a gentle, low-contrast sheen that
+   drifts slowly across it. No bright hot-spots and no outer glow. */
 :root {
   --neon: #2641FF;
-  /* polished metal: dark olive troughs, white-hot highlights, neon body */
-  --chrome: linear-gradient(105deg, #0f1f99 0%, #2238e6 16%, #aab6ff 27%, #2641ff 34%, #1628b8 48%, #2641ff 62%, #d3d9ff 70%, #1f35d9 82%, #0f1f99 100%);
-  /* gentler version for big surfaces so black text stays readable */
-  --chrome-soft: linear-gradient(105deg, #1f36e6 0%, #2641ff 22%, #6f80ff 32%, #2641ff 44%, #1d32d9 58%, #4a5fff 72%, #2440f5 86%, #1f36e6 100%);
+  /* satin: shallow light/shade around the accent, one soft highlight band */
+  --chrome: linear-gradient(105deg, #1f37e6 0%, #2641ff 28%, #4c63ff 44%, #3550ff 52%, #2641ff 66%, #1d34dc 100%);
+  /* even calmer for large surfaces */
+  --chrome-soft: linear-gradient(105deg, #2139ec 0%, #2641ff 30%, #3d56ff 48%, #2641ff 66%, #2139ec 100%);
 }
 @keyframes chrome-sheen {
   from { background-position: 0% 50%; }
@@ -34,31 +36,30 @@
 .chrome-text {
   color: var(--neon);
   background-image: var(--chrome);
-  background-size: 220% 100%;
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: chrome-sheen 6s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 7px rgba(38, 65, 255, 0.22));
+  animation: chrome-sheen 10s ease-in-out infinite alternate;
 }
 .chrome-bg {
   background-color: var(--neon);
   background-image: var(--chrome);
-  background-size: 220% 100%;
-  animation: chrome-sheen 7s ease-in-out infinite alternate;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 6px rgba(0, 0, 0, 0.18), 0 0 22px -8px rgba(38, 65, 255, 0.45);
-}
-.chrome-surface {
-  background-color: #b5f51a;
-  background-image: var(--chrome-soft);
   background-size: 200% 100%;
   animation: chrome-sheen 12s ease-in-out infinite alternate;
+  /* a faint top edge, like light catching a satin surface */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+}
+.chrome-surface {
+  background-color: var(--neon);
+  background-image: var(--chrome-soft);
+  background-size: 200% 100%;
+  animation: chrome-sheen 16s ease-in-out infinite alternate;
 }
 .neon-line {
   background-image: var(--chrome);
-  background-size: 220% 100%;
-  animation: chrome-sheen 5s ease-in-out infinite alternate;
-  box-shadow: 0 0 10px rgba(38, 65, 255, 0.4);
+  background-size: 200% 100%;
+  animation: chrome-sheen 8s ease-in-out infinite alternate;
 }
 /* Performance: the sheen repaints every frame, so it only runs on elements
    that are on screen (SheenPauser sets data-sheen-on), and never on phones —

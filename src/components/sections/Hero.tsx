@@ -132,7 +132,7 @@ function Ribbon({ className, reverse, dark }: { className: string; reverse?: boo
     <div
       aria-hidden
       className={`absolute left-[-6%] w-[112%] ${className} ${
-        dark ? "border-y border-[#2641FF]/40 bg-black text-[#2641FF] [text-shadow:0_0_10px_rgba(38,65,255,0.35)]" : "chrome-bg text-black"
+        dark ? "border-y border-[#2641FF]/40 bg-black text-[#2641FF]" : "chrome-bg text-black"
       }`}
     >
       <VelocityMarquee baseVelocity={reverse ? -2 : 2.6} innerClassName="py-2.5 md:py-3">
