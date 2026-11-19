@@ -75,7 +75,7 @@ export function Manifesto({ page = false }: { page?: boolean }) {
               aria-label="Back to the home page"
               className="group inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em]"
             >
-              <span className="grid size-11 place-items-center rounded-full bg-black text-[#AEFF00] transition-transform duration-300 group-hover:-translate-x-1 group-hover:scale-105">
+              <span className="grid size-11 place-items-center rounded-full bg-black text-[#2641FF] transition-transform duration-300 group-hover:-translate-x-1 group-hover:scale-105">
                 <ArrowLeft className="size-5 transition-transform duration-300 group-hover:-translate-x-0.5" />
               </span>
               Back

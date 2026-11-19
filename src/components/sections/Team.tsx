@@ -41,8 +41,8 @@ const SUIT_NAME: Record<Suit, string> = {
 };
 // Black suits take the brand lime, red suits a warm coral — both read on a dark card.
 const SUIT_COLOR: Record<Suit, string> = {
-  spades: "#AEFF00",
-  clubs: "#AEFF00",
+  spades: "#2641FF",
+  clubs: "#2641FF",
   hearts: "#FF5468",
   diamonds: "#FF5468",
 };
@@ -184,15 +184,15 @@ function CardBack({ style }: { style?: CSSProperties }) {
       className="absolute inset-0 overflow-hidden rounded-[1.1em]"
       style={{
         background:
-          "repeating-linear-gradient(45deg, rgba(174,255,0,0.16) 0 1px, transparent 1px 11px), repeating-linear-gradient(-45deg, rgba(174,255,0,0.16) 0 1px, transparent 1px 11px), #080808",
-        border: "1px solid rgba(174,255,0,0.45)",
+          "repeating-linear-gradient(45deg, rgba(38,65,255,0.16) 0 1px, transparent 1px 11px), repeating-linear-gradient(-45deg, rgba(38,65,255,0.16) 0 1px, transparent 1px 11px), #080808",
+        border: "1px solid rgba(38,65,255,0.45)",
         boxShadow: "0 30px 70px -20px rgba(0,0,0,0.9)",
         ...style,
       }}
     >
-      <div className="absolute inset-[0.75em] rounded-xl border border-[#AEFF00]/40" />
+      <div className="absolute inset-[0.75em] rounded-xl border border-[#2641FF]/40" />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="rounded-xl bg-[#080808] px-[1.25em] py-[1em] ring-1 ring-[#AEFF00]/40">
+        <div className="rounded-xl bg-[#080808] px-[1.25em] py-[1em] ring-1 ring-[#2641FF]/40">
           <img src={logoWhite} alt="" draggable={false} className="w-[6em] object-contain" />
         </div>
       </div>
@@ -520,7 +520,7 @@ export function Team() {
               type="button"
               onClick={() => step(-1)}
               aria-label="Previous team member"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#AEFF00] hover:bg-[#AEFF00] hover:text-black"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-black"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
@@ -537,7 +537,7 @@ export function Team() {
               type="button"
               onClick={() => step(1)}
               aria-label="Next team member"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#AEFF00] hover:bg-[#AEFF00] hover:text-black"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-black"
             >
               <ArrowRight className="h-4 w-4" />
             </button>

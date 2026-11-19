@@ -117,7 +117,7 @@ export function Testimonials() {
                 {idx === i && (
                   <span
                     key={i}
-                    className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-[#AEFF00]"
+                    className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-[#2641FF]"
                     style={{
                       animation: still ? undefined : `review-fill ${SLIDE_MS}ms linear forwards`,
                       animationPlayState: running ? "running" : "paused",

@@ -150,7 +150,7 @@ export function Socials() {
               <div
                 className={`relative h-full w-full overflow-hidden border bg-[#0d0d0d] transition-[border-color,box-shadow,filter] duration-300 ${
                   isPicked
-                    ? "border-[#AEFF00]/70 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.95),0_0_40px_-6px_rgba(174,255,0,0.45)]"
+                    ? "border-[#2641FF]/70 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.95),0_0_40px_-6px_rgba(38,65,255,0.45)]"
                     : "border-white/10 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.9)]"
                 } ${picked !== null && !isPicked ? "brightness-[.6]" : ""}`}
                 style={{ borderRadius: W * 0.16 }}

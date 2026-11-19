@@ -76,7 +76,7 @@ export function CapabilityStack({ content }: { content: ServiceContent }) {
               <span
                 key={c.title}
                 className="h-1.5 rounded-full transition-all duration-500"
-                style={{ width: i < count ? 34 : 12, background: i < count ? "#AEFF00" : "rgba(255,255,255,0.18)" }}
+                style={{ width: i < count ? 34 : 12, background: i < count ? "#2641FF" : "rgba(255,255,255,0.18)" }}
               />
             ))}
             <span className="font-display text-sm font-bold tabular-nums text-white/50">
@@ -105,11 +105,11 @@ function RailStep({ step, i, n, p }: { step: { title: string; desc: string }; i:
   const rotate = useTransform(lit, [0, 1], [i % 2 ? 8 : -8, 0]);
   const opacity = useTransform(lit, [0, 1], [0.25, 1]);
   const dot = useTransform(lit, [0, 1], [0.4, 1.4]);
-  const glow = useTransform(lit, (v) => `0 0 ${v * 30}px rgba(174,255,0,${v * 0.7})`);
+  const glow = useTransform(lit, (v) => `0 0 ${v * 30}px rgba(38,65,255,${v * 0.7})`);
   return (
     <div className="relative flex w-[78vw] shrink-0 flex-col sm:w-[360px]">
       <motion.span
-        className="relative z-10 mb-8 block size-4 rounded-full bg-[#AEFF00]"
+        className="relative z-10 mb-8 block size-4 rounded-full bg-[#2641FF]"
         style={{ scale: dot, boxShadow: glow }}
       />
       <motion.div style={{ y, rotate, opacity }} className="rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-sm">
@@ -164,7 +164,7 @@ export function ProcessRail({ content }: { content: ServiceContent }) {
               <span className="chrome-text pr-[0.06em] font-light italic">to final file.</span>
             </h2>
             <p className="mt-6 flex items-center gap-3 text-sm text-white/50">
-              <ArrowRight className="size-4 text-[#AEFF00]" /> scroll to move along the process
+              <ArrowRight className="size-4 text-[#2641FF]" /> scroll to move along the process
             </p>
           </div>
           <div className="relative flex gap-10 md:gap-16">
@@ -220,7 +220,7 @@ export function StatsBurst({ content }: { content: ServiceContent }) {
                 transition={{ duration: 0.9, delay: i * 0.12, ease: EASE }}
                 className="border-t border-white/15 pt-6"
               >
-                <Icon className="mb-4 size-5 text-[#AEFF00]" strokeWidth={1.6} />
+                <Icon className="mb-4 size-5 text-[#2641FF]" strokeWidth={1.6} />
                 <p className="font-display text-[clamp(3rem,7.5vw,6.5rem)] font-black leading-[0.85] tracking-tighter tabular-nums">
                   <span className="chrome-text pr-[0.04em]">
                     <Count value={s.value} p={p} range={[0.1 + i * 0.08, 0.85 + i * 0.05]} />
@@ -307,7 +307,7 @@ export function FormulaCollide({ content }: { content: ServiceContent }) {
           </motion.span>
           <motion.div
             style={{ scale: outScale, opacity: outOpacity, rotate: outRotate }}
-            className="rounded-2xl bg-black px-6 py-4 text-center font-display text-lg font-black text-[#AEFF00] shadow-[6px_6px_0_rgba(0,0,0,0.35)] md:px-9 md:py-6 md:text-2xl"
+            className="rounded-2xl bg-black px-6 py-4 text-center font-display text-lg font-black text-[#2641FF] shadow-[6px_6px_0_rgba(0,0,0,0.35)] md:px-9 md:py-6 md:text-2xl"
           >
             {output.label}
           </motion.div>
@@ -349,7 +349,7 @@ function EcoRow({ i, currentSlug }: { i: number; currentSlug: string }) {
           {inner}
         </div>
       ) : (
-        <Link to={s.path} className="group relative flex items-center gap-5 overflow-hidden px-5 py-6 text-white/80 transition-colors hover:text-black md:gap-8 md:px-8">
+        <Link to={s.path} className="group relative flex items-center gap-5 overflow-hidden px-5 py-6 text-white/80 transition-colors hover:text-white md:gap-8 md:px-8">
           <span className="chrome-bg absolute inset-0 -z-10 origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-x-100" />
           {inner}
         </Link>
@@ -399,10 +399,10 @@ export function ClosingZoom({ content }: { content: ServiceContent }) {
         <motion.div
           aria-hidden
           style={{ opacity: glow }}
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_45%_at_50%_60%,rgba(174,255,0,0.2),transparent_70%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_45%_at_50%_60%,rgba(38,65,255,0.2),transparent_70%)]"
         />
         <motion.div style={{ scale, opacity, filter: blur }} className="relative">
-          <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.4em] text-[#AEFF00] md:text-xs">{content.closingKicker}</p>
+          <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.4em] text-[#2641FF] md:text-xs">{content.closingKicker}</p>
           <h2 className="mx-auto max-w-5xl font-display text-[clamp(2.2rem,7vw,6.5rem)] font-black uppercase leading-[0.9] tracking-tight">
             {content.closingPlain} <span className="chrome-text pr-[0.04em]">{content.closingAccent}</span>
           </h2>
@@ -414,7 +414,7 @@ export function ClosingZoom({ content }: { content: ServiceContent }) {
           {next && (
             <Link to={next.path} className="group inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-white/55 transition-colors hover:text-white">
               Next: {next.title}
-              <ArrowRight className="size-4 text-[#AEFF00] transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="size-4 text-[#2641FF] transition-transform group-hover:translate-x-1" />
             </Link>
           )}
         </motion.div>

@@ -29,7 +29,7 @@
 }
 .svc-card:hover .svc-num {
   background-size: 100% 100%;
-  -webkit-text-stroke-color: #AEFF00;
+  -webkit-text-stroke-color: #2641FF;
 }
 
 /* a soft diagonal shine that crosses each card every few seconds */

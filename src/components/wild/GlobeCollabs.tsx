@@ -15,7 +15,7 @@ const COUNTRIES = [
   { name: "India", city: "Home base", tz: "Asia/Kolkata", loc: [21.0, 78.0] as [number, number] },
 ];
 
-const LIME: [number, number, number] = [174 / 255, 1, 0];
+const LIME: [number, number, number] = [38 / 255, 65 / 255, 1];
 const TAU = Math.PI * 2;
 /** Globe angles that put a given lat/lng at the front (cobe's orientation). */
 const facing = ([lat, lng]: [number, number]) => ({
@@ -162,7 +162,7 @@ export function GlobeCollabs() {
           initial={{ opacity: 0, x: -20 }}
           animate={shown ? { opacity: 1, x: 0 } : undefined}
           transition={{ duration: 0.7 }}
-          className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-[#AEFF00] md:text-xs"
+          className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-[#2641FF] md:text-xs"
         >
           <Plane className="size-4" /> Global collaborations
         </motion.p>
@@ -195,7 +195,7 @@ export function GlobeCollabs() {
                   onBlur={release}
                   className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] bg-transparent py-2.5 text-left md:py-3"
                 >
-                  <span className={`w-6 font-display text-xs font-bold tabular-nums transition-colors ${on ? "text-[#AEFF00]" : "text-white/25"}`}>
+                  <span className={`w-6 font-display text-xs font-bold tabular-nums transition-colors ${on ? "text-[#2641FF]" : "text-white/25"}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span
@@ -207,7 +207,7 @@ export function GlobeCollabs() {
                   </span>
                   <span className={`text-right text-[10px] uppercase tracking-[0.2em] transition-opacity duration-500 md:text-[11px] ${on ? "opacity-100" : "opacity-0"}`}>
                     <span className="text-white/45">{k.city}</span>
-                    <span className="ml-2 font-display font-bold tabular-nums text-[#AEFF00]">
+                    <span className="ml-2 font-display font-bold tabular-nums text-[#2641FF]">
                       <Clock tz={k.tz} now={now} />
                     </span>
                   </span>

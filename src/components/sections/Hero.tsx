@@ -74,8 +74,8 @@ function FloatingCard({ card, index, progress }: { card: Card; index: number; pr
             className="block h-auto w-full rounded-xl"
             style={{
               boxShadow: `0 40px 70px -24px rgba(0,0,0,0.9), 0 0 0 1px ${
-                card.far ? "rgba(255,255,255,0.08)" : "rgba(174,255,0,0.28)"
-              }, 0 0 40px -8px rgba(174,255,0,${card.far ? 0.05 : 0.16})`,
+                card.far ? "rgba(255,255,255,0.08)" : "rgba(38,65,255,0.28)"
+              }, 0 0 40px -8px rgba(38,65,255,${card.far ? 0.05 : 0.16})`,
               filter: card.far ? "blur(1.5px) saturate(0.8)" : undefined,
             }}
             animate={{ y: [0, -14, 0], rotate: [0, card.fx * 2, 0] }}
@@ -132,7 +132,7 @@ function Ribbon({ className, reverse, dark }: { className: string; reverse?: boo
     <div
       aria-hidden
       className={`absolute left-[-6%] w-[112%] ${className} ${
-        dark ? "border-y border-[#AEFF00]/40 bg-black text-[#AEFF00] [text-shadow:0_0_10px_rgba(174,255,0,0.35)]" : "chrome-bg text-black"
+        dark ? "border-y border-[#2641FF]/40 bg-black text-[#2641FF] [text-shadow:0_0_10px_rgba(38,65,255,0.35)]" : "chrome-bg text-black"
       }`}
     >
       <VelocityMarquee baseVelocity={reverse ? -2 : 2.6} innerClassName="py-2.5 md:py-3">

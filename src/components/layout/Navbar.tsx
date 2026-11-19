@@ -140,7 +140,7 @@ export function Navbar() {
                 text-black
                 transition-all
                 duration-300
-                hover:shadow-[0_0_28px_-4px_rgba(174,255,0,0.7)]
+                hover:shadow-[0_0_28px_-4px_rgba(38,65,255,0.7)]
               "
             >
               Book a Call

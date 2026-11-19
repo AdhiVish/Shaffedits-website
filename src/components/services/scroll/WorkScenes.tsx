@@ -77,7 +77,7 @@ function HeroThumb({ piece, i, p }: { piece: WorkPiece; i: number; p: MotionValu
         initial={{ opacity: 0, scale: 0.3, rotate: -30 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 90, damping: 14, delay: 0.5 + i * 0.09 }}
-        className="block aspect-[4/5] w-full rounded-xl object-cover shadow-[0_40px_70px_-20px_rgba(0,0,0,0.9)] ring-1 ring-[#AEFF00]/30"
+        className="block aspect-[4/5] w-full rounded-xl object-cover shadow-[0_40px_70px_-20px_rgba(0,0,0,0.9)] ring-1 ring-[#2641FF]/30"
       />
     </motion.div>
   );
@@ -197,7 +197,7 @@ export function ScrollHero({ content, work }: { content: ServiceContent; work: W
         >
           scroll for the work
           <motion.span animate={{ y: [0, 8, 0] }} transition={{ duration: 1.4, repeat: Infinity }}>
-            <ArrowDown className="size-4 text-[#AEFF00]" />
+            <ArrowDown className="size-4 text-[#2641FF]" />
           </motion.span>
         </motion.div>
       </div>
@@ -270,7 +270,7 @@ export function WorkHelix({ work, title }: { work: WorkPiece[]; title: [string, 
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(45% 55% at 50% 55%, rgba(174,255,0,0.12), transparent 70%)" }}
+          style={{ background: "radial-gradient(45% 55% at 50% 55%, rgba(38,65,255,0.12), transparent 70%)" }}
         />
 
         <div className="absolute left-5 top-24 z-10 md:left-12 md:top-28">
