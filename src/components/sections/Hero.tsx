@@ -169,9 +169,10 @@ export function Hero() {
 
   // The dimmed Shaffedits logo behind the hero: it brightens while the words fade out,
   // and only once they're gone does it rise, carrying on up as the next section arrives.
-  const logoOpacity = useTransform(p, [0, 0.38], [0.07, 0.35]);
+  const logoOpacity = useTransform(p, [0, 0.38], [0.07, 1]);
   const logoY = useTransform(p, [0.4, 1], ["0vh", "-24vh"]);
   const logoScale = useTransform(p, [0, 0.4, 1], [1, 1.06, 1.12]);
+  const vignette = useTransform(p, [0.05, 0.35], [1, 0]);
 
   // Leaving the home page for another route: the next visit to the hero skips the preloader wait.
   // (React's dev double-mount also unmounts once, but the URL is still the home page then.)
@@ -254,7 +255,7 @@ export function Hero() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(440px circle at var(--mx, 50%) var(--my, 45%), rgba(172,236,0,0.13), transparent 70%)",
+                "radial-gradient(420px circle at var(--mx, 50%) var(--my, 45%), rgba(255,255,255,0.06), transparent 70%)",
             }}
           />
         </div>
@@ -281,8 +282,10 @@ export function Hero() {
           <FloatingCard key={c.src} card={c} index={i} progress={p} />
         ))}
 
-        <div
+        {/* edge shading: fades out as you scroll so the rising logo reads as solid white */}
+        <motion.div
           aria-hidden
+          style={{ opacity: vignette }}
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.75)_100%)]"
         />
 

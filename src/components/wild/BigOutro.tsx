@@ -1,6 +1,9 @@
 import { useRef } from "react";
 import { motion, useTransform, type MotionValue } from "motion/react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useJsScroll } from "@/components/wild/useJsScroll";
+
+const WHATSAPP_URL = `https://wa.me/918807705502?text=${encodeURIComponent("Hi Shaffedits! I have an idea")}`;
 
 const LINES = ["GOT AN", "IDEA?"];
 
@@ -32,6 +35,8 @@ export function BigOutro() {
   const { scrollYProgress } = useJsScroll({ target: ref, offset: ["start start", "end end"] });
   const sub = useTransform(scrollYProgress, [0.6, 0.85], [0, 1]);
   const subY = useTransform(scrollYProgress, [0.6, 0.85], ["40px", "0px"]);
+  // the button only takes clicks once it has faded in
+  const ctaEvents = useTransform(sub, (v) => (v > 0.6 ? "auto" : "none"));
   let seed = 1;
 
   return (
@@ -49,6 +54,16 @@ export function BigOutro() {
         <motion.p style={{ opacity: sub, y: subY }} className="mt-8 max-w-md text-lg font-medium md:text-xl">
           Good. Let's make it loud. Tell us about it below ↓
         </motion.p>
+        <motion.a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ opacity: sub, y: subY, pointerEvents: ctaEvents }}
+          className="group mt-8 inline-flex items-center gap-3 rounded-full bg-black px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] text-white shadow-[0_18px_40px_-14px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105"
+        >
+          <FaWhatsapp className="size-5 text-[#25D366] transition-transform duration-300 group-hover:rotate-12" aria-hidden />
+          Chat us on WhatsApp
+        </motion.a>
       </div>
     </section>
   );

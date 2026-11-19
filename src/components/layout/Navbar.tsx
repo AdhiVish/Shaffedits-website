@@ -129,10 +129,8 @@ export function Navbar() {
                 inline-flex
                 items-center
                 justify-center
+                chrome-bg
                 rounded-full
-                bg-gradient-to-r
-                from-white
-                to-gray-300
                 px-6
                 py-2.5
                 text-xs
@@ -140,11 +138,9 @@ export function Navbar() {
                 uppercase
                 tracking-[0.18em]
                 text-black
-                shadow-lg
-                shadow-white/10
                 transition-all
                 duration-300
-                hover:shadow-white/30
+                hover:shadow-[0_0_28px_-4px_rgba(184,255,46,0.7)]
               "
             >
               Book a Call
@@ -215,12 +211,10 @@ export function Navbar() {
                       to={resolveHref("#contact")}
                       onClick={() => setOpen(false)}
                       className="
+                        chrome-bg
                         mt-3
                         block
                         rounded-full
-                        bg-gradient-to-r
-                        from-white
-                        to-gray-300
                         px-4
                         py-3
                         text-center

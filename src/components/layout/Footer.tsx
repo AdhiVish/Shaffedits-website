@@ -12,8 +12,7 @@ export function Footer() {
     <footer className="border-t border-white/10 bg-black px-6 py-14 text-white/60">
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-3">
         <div>
-          <img src={logoWhite} alt="Shaffedits" className="h-10 w-auto" loading="lazy" />
-          <p className="mt-6 max-w-xs text-sm">
+          <p className="max-w-xs text-sm">
             Creative agency building brands people remember.
           </p>
         </div>
@@ -37,6 +36,16 @@ export function Footer() {
             <li><a href="https://www.youtube.com/@ShaffEdits." target="_blank" rel="noopener noreferrer" className="hover:text-white">YouTube</a></li>
           </ul>
         </div>
+      </div>
+      {/* the full white logo, centred as the footer's sign-off */}
+      <div className="mx-auto mt-14 flex max-w-6xl justify-center">
+        <img
+          src={logoWhite}
+          alt="Shaffedits"
+          loading="lazy"
+          className="h-auto w-[min(72vw,440px)] select-none"
+          draggable={false}
+        />
       </div>
       <div className="mx-auto mt-12 flex max-w-6xl flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center">
         <p>© {year} Shaffedits. All rights reserved.</p>
