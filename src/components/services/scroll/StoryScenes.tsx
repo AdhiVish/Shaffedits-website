@@ -62,7 +62,7 @@ export function CapabilityStack({ content }: { content: ServiceContent }) {
   useMotionValueEvent(shown, "change", (v) => setCount(v));
 
   return (
-    <section ref={ref} className="relative bg-black text-white" style={{ height: `${100 + n * 50}vh` }}>
+    <section ref={ref} className="relative bg-black text-white" style={{ height: `${100 + n * 35}vh` }}>
       <div className="sticky top-0 mx-auto grid h-svh max-w-7xl items-center gap-8 px-5 pt-20 md:grid-cols-[0.85fr_1.15fr] md:gap-14 md:px-12">
         <div>
           <Kicker>What we do / 02</Kicker>
@@ -135,7 +135,7 @@ export function ProcessRail({ content }: { content: ServiceContent }) {
       if (!t) return;
       const d = Math.max(0, t.scrollWidth - window.innerWidth);
       dist.set(d);
-      setHeight(`${d + window.innerHeight * 1.6}px`);
+      setHeight(`${d * 0.8 + window.innerHeight * 1.2}px`);
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -280,7 +280,7 @@ export function FormulaCollide({ content }: { content: ServiceContent }) {
   const headY = useTransform(p, [0, 0.3], [40, 0]);
 
   return (
-    <section ref={ref} className="relative h-[200vh] bg-white text-black">
+    <section ref={ref} className="relative h-[155vh] bg-white text-black">
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-5">
         <motion.div style={{ clipPath: flood }} aria-hidden className="chrome-surface absolute inset-0" />
         <motion.div style={{ y: headY }} className="relative mb-12 text-center md:mb-16">
@@ -394,7 +394,7 @@ export function ClosingZoom({ content }: { content: ServiceContent }) {
   const next = services.find((s) => s.slug === content.nextSlug);
 
   return (
-    <section ref={ref} className="relative h-[175vh] bg-black text-white">
+    <section ref={ref} className="relative h-[140vh] bg-black text-white">
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-5 text-center">
         <motion.div
           aria-hidden

@@ -90,12 +90,15 @@ function ScatterWord({ word, i, p, accent }: { word: string; i: number; p: Motio
   const y = useTransform(p, [0.04, 0.8], ["0vh", `${dy}vh`]);
   const rotate = useTransform(p, [0.04, 0.8], [0, (rnd(i, 3) - 0.5) * 120]);
   const opacity = useTransform(p, [0.35, 0.8], [1, 0]);
-  const filter = useTransform(p, [0.1, 0.8], ["blur(0px)", "blur(12px)"]);
+  // no filter at all until the scatter starts: even blur(0px) gives the word its own layer and a faint box
+  const filter = useTransform(p, (v) => (v <= 0.1 ? "none" : `blur(${(clamp((v - 0.1) / 0.7) * 12).toFixed(2)}px)`));
   return (
     <motion.span className="inline-block" style={{ x, y, rotate, opacity, filter }}>
-      <span className="inline-block overflow-hidden pb-[0.1em] align-bottom">
+      <span className="-mb-[0.18em] inline-block overflow-hidden pb-[0.22em] align-bottom">
         <motion.span
-          className={"inline-block " + (accent ? "chrome-text pr-[0.06em] font-light italic" : "")}
+          className={"inline-block " + (accent ? "chrome-text pb-[0.14em] pr-[0.06em] font-light italic" : "")}
+          // chrome-text's glow is a drop-shadow that the reveal mask would clip into a visible box
+          style={accent ? { filter: "none" } : undefined}
           initial={{ y: "110%", rotate: 8 }}
           animate={{ y: "0%", rotate: 0 }}
           transition={{ duration: 1, delay: 0.2 + i * 0.07, ease: EASE }}
@@ -121,7 +124,7 @@ export function ScrollHero({ content, work }: { content: ServiceContent; work: W
   const glow = useTransform(p, [0, 0.6], [0.6, 1]);
 
   return (
-    <section ref={ref} className="relative h-[165vh] bg-black text-white">
+    <section ref={ref} className="relative h-[130vh] bg-black text-white">
       <div className="sticky top-0 flex h-svh flex-col overflow-hidden px-5 pt-28 md:px-12 md:pt-32">
         <motion.div
           aria-hidden
@@ -254,7 +257,7 @@ export function WorkHelix({ work, title }: { work: WorkPiece[]; title: [string, 
   const { client, piece } = splitAlt(items[cur]?.alt ?? "");
 
   return (
-    <section id="work" ref={ref} className="relative bg-black text-white" style={{ height: `${110 + n * 32}vh` }}>
+    <section id="work" ref={ref} className="relative bg-black text-white" style={{ height: `${90 + n * 22}vh` }}>
       <div className="sticky top-0 h-svh overflow-hidden" style={{ perspective: phone ? 900 : 1300 }}>
         {/* client name, huge and outlined, sliding behind the spiral */}
         <motion.div
@@ -362,7 +365,7 @@ export function WorkWall({ work }: { work: WorkPiece[] }) {
   const headOpacity = useTransform(p, [0.15, 0.35, 0.8, 0.95], [0, 1, 1, 0]);
 
   return (
-    <section ref={ref} className="relative h-[200vh] bg-black text-white">
+    <section ref={ref} className="relative h-[160vh] bg-black text-white">
       <div className="sticky top-0 h-svh overflow-hidden" style={{ perspective: 1400 }}>
         <motion.div
           className="absolute -inset-x-[12%] -inset-y-[30%] flex gap-3 md:gap-4"
