@@ -236,11 +236,11 @@ export function Hero() {
         ref={stageRef}
         className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-6 pb-40 pt-36"
       >
-        {/* Lime horizon glow */}
+        {/* Soft white horizon glow */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%]"
-          style={{ background: "radial-gradient(ellipse 70% 100% at 50% 100%, rgba(172,236,0,0.22), transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse 70% 100% at 50% 100%, rgba(255,255,255,0.08), transparent 70%)" }}
         />
         <motion.div
           aria-hidden
