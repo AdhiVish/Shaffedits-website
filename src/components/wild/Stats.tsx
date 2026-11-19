@@ -31,13 +31,13 @@ function Stat({ value, suffix, label, i }: { value: number; suffix: string; labe
         flip ? "md:flex-row-reverse md:text-right" : ""
       }`}
     >
-      <span className="font-display text-[clamp(4.5rem,15vw,13rem)] font-black leading-[0.85] tracking-tighter tabular-nums">
+      <span className="font-display text-[clamp(3.25rem,9.5vw,8rem)] font-black leading-[0.85] tracking-tighter tabular-nums">
         <span className="chrome-text pr-[0.04em]">
           <motion.span>{text}</motion.span>
           {suffix}
         </span>
       </span>
-      <span className="max-w-[14ch] font-display text-xl font-medium leading-tight text-white/70 md:text-3xl">{label}</span>
+      <span className="max-w-[14ch] font-display text-lg font-medium leading-tight text-white/70 md:text-2xl">{label}</span>
     </motion.div>
   );
 }
