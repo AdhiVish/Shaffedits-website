@@ -63,14 +63,3 @@
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
-/* "View work" pill follows the cursor inside a tile (--tx/--ty set on mousemove) */
-.work-pill {
-  left: var(--tx, 50%);
-  top: var(--ty, 50%);
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.work-tile:hover .work-pill { transform: translate(-50%, -50%) scale(1); }
-@media (prefers-reduced-motion: reduce) {
-  .work-pill { transition: none; }
-}

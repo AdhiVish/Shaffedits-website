@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "motion/react";
-import { Link } from "react-router-dom";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 
 const base = import.meta.env.BASE_URL;
 const pf = (folder: string, file: string) => encodeURI(`${base}portfolio/${folder}/${file}`);
@@ -13,8 +12,6 @@ const BRAND = "Branding + Presentation";
 type Project = {
   client: string;
   tags: string[];
-  /** where "view work" goes: the most relevant service page */
-  to: string;
   images: string[];
   /** grid placement classes for phone / desktop */
   area: string;
@@ -26,7 +23,6 @@ const PROJECTS: Project[] = [
   {
     client: "Lspace",
     tags: ["Website", "Social media", "Content"],
-    to: "/services/website-design-development",
     big: true,
     area: "col-span-2 lg:col-span-2 lg:row-span-2",
     images: [
@@ -41,12 +37,11 @@ const PROJECTS: Project[] = [
   {
     client: "Cloud Apparels",
     tags: ["Branding", "Packaging", "Website", "Social"],
-    to: "/services/branding-design",
     area: "lg:col-span-2",
     images: [
       pf(BANNERS, "Banner 1 - Slide 1 copy.webp"),
       pf(BRAND, "Copy of mockup 2 copy.webp"),
-      pf(WEB, "Cloud Website copy.webp"),
+      pf(BANNERS, "Banner 2 - Slide 1 copy.webp"),
       pf(BRAND, "Copy of Cloud Box packaging 11 copy.webp"),
       pf(SOCIAL, "Copy of Cloudapparels_Static01_012026 copy.webp"),
       pf(BANNERS, "Banner 3 - Slide 1 copy.webp"),
@@ -55,7 +50,6 @@ const PROJECTS: Project[] = [
   {
     client: "Cricketeria",
     tags: ["E-commerce", "Web banners", "Merch"],
-    to: "/services/website-design-development",
     area: "",
     images: [
       pf(BANNERS, "Main_hero_mobile_banner_slide1 copy.webp"),
@@ -68,7 +62,6 @@ const PROJECTS: Project[] = [
   {
     client: "Purple Curve",
     tags: ["Social media", "Meta ads"],
-    to: "/services/social-media-management",
     area: "",
     images: [
       pf(SOCIAL, "Purplecurve_Carousel01_042026_Slide01 copy.webp"),
@@ -80,7 +73,6 @@ const PROJECTS: Project[] = [
   {
     client: "Identity systems",
     tags: ["Logos", "Brand guidelines"],
-    to: "/services/branding-design",
     area: "",
     images: ["b5", "b2", "b9", "b3", "b1", "b6"].map((b) => pf(BRAND, `${b} copy.webp`)),
   },
@@ -161,29 +153,14 @@ function Slides({ images, interval, offset, running }: { images: string[]; inter
 }
 
 function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [hover, setHover] = useState(false);
-  const move = (e: MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const b = el.getBoundingClientRect();
-    el.style.setProperty("--tx", `${e.clientX - b.left}px`);
-    el.style.setProperty("--ty", `${e.clientY - b.top}px`);
-  };
-
   return (
     <motion.div
-      ref={ref}
-      onMouseMove={move}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       initial={{ clipPath: "inset(100% 0 0 0 round 24px)", y: 40 }}
       animate={show ? { clipPath: "inset(0% 0 0 0 round 24px)", y: 0 } : undefined}
       transition={{ duration: 1.1, delay: 0.15 + index * 0.1, ease: EASE }}
-      className={`work-tile group relative min-h-0 overflow-hidden rounded-2xl bg-neutral-900 transition-[filter] duration-500 group-hover/wall:[filter:brightness(.5)_saturate(.6)] hover:![filter:none] md:rounded-3xl ${p.area}`}
+      className={`relative min-h-0 overflow-hidden rounded-2xl bg-neutral-900 md:rounded-3xl ${p.area}`}
     >
-      <Link to={p.to} className="absolute inset-0 z-30" aria-label={`${p.client}: view work`} />
-      <Slides images={p.images} interval={p.big ? 3200 : 2700 + index * 230} offset={1400 + index * 520} running={show && !hover} />
+      <Slides images={p.images} interval={p.big ? 3200 : 2700 + index * 230} offset={1400 + index * 520} running={show} />
 
       {/* legibility gradient + client name */}
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/15 to-black/30" />
@@ -207,7 +184,7 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 p-4 pb-6 md:p-5 md:pb-7">
         <h3
-          className={`font-display font-black leading-[0.9] tracking-tight text-white transition-transform duration-500 group-hover:-translate-y-1 ${
+          className={`font-display font-black leading-[0.9] tracking-tight text-white ${
             p.big ? "text-[clamp(2rem,5vw,4.75rem)]" : "text-[clamp(1.15rem,2.2vw,2rem)]"
           }`}
         >
@@ -216,10 +193,6 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
         <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.2em] text-white/55">{p.images.length} pieces shown</p>
       </div>
 
-      {/* "view work" pill that follows the cursor */}
-      <span className="work-pill pointer-events-none absolute z-20 hidden items-center gap-1.5 rounded-full bg-[#b8ff2e] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-black md:inline-flex">
-        View work <ArrowUpRight className="size-3.5" />
-      </span>
     </motion.div>
   );
 }
@@ -227,7 +200,7 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
 /**
  * Selected projects, from a client's point of view: one screen, no scroll
  * journey. Real clients as tiles, each quietly cycling through the work we
- * made for them; the tiles open the relevant service page.
+ * made for them. The tiles are display only; the lime tile leads to the archive.
  */
 export function SelectedWork() {
   const ref = useRef<HTMLElement>(null);
@@ -271,11 +244,11 @@ export function SelectedWork() {
           transition={{ duration: 0.8, delay: 0.5, ease: EASE }}
           className="hidden max-w-xs text-sm leading-relaxed text-white/60 md:block"
         >
-          Real brands, real work. Each tile plays through what we made for that client. Hover to pause, click to see more.
+          Real brands, real work. Each tile plays through what we made for that client.
         </motion.p>
       </div>
 
-      <div className="group/wall grid min-h-0 flex-1 grid-cols-2 grid-rows-[1.35fr_1fr_1fr_auto] gap-2.5 md:gap-4 lg:grid-cols-5 lg:grid-rows-2">
+      <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[1.35fr_1fr_1fr_auto] gap-2.5 md:gap-4 lg:grid-cols-5 lg:grid-rows-2">
         {PROJECTS.map((p, i) => (
           <Tile key={p.client} p={p} index={i} show={show} />
         ))}
