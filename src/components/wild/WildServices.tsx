@@ -123,7 +123,7 @@ function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; co
             </span>
             <span
               aria-hidden
-              className="absolute inset-0 block translate-y-full text-[#b8ff2e] transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-y-0"
+              className="absolute inset-0 block translate-y-full text-[#AEFF00] transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-y-0"
             >
               {s.title}
             </span>

@@ -21,11 +21,11 @@
 
 /* ---------- neon chrome finish ---------- */
 :root {
-  --neon: #b8ff2e;
+  --neon: #AEFF00;
   /* polished metal: dark olive troughs, white-hot highlights, neon body */
-  --chrome: linear-gradient(105deg, #4d7a00 0%, #a6e600 16%, #ecffc2 27%, #c4ff3a 34%, #6f9f00 48%, #b8ff2e 62%, #f4ffdc 70%, #9bd400 82%, #4d7a00 100%);
+  --chrome: linear-gradient(105deg, #5c8a00 0%, #9ae600 16%, #e4ffa6 27%, #aeff00 34%, #6f9e00 48%, #aeff00 62%, #efffcc 70%, #92d600 82%, #5c8a00 100%);
   /* gentler version for big surfaces so black text stays readable */
-  --chrome-soft: linear-gradient(105deg, #a3e000 0%, #c2ff2e 22%, #e6ffab 32%, #b5f51a 44%, #9fd900 58%, #d6ff6b 72%, #b0ef12 86%, #a3e000 100%);
+  --chrome-soft: linear-gradient(105deg, #a2ee00 0%, #aeff00 22%, #dcff8f 32%, #aeff00 44%, #9be600 58%, #c8ff4d 72%, #a8f700 86%, #a2ee00 100%);
 }
 @keyframes chrome-sheen {
   from { background-position: 0% 50%; }
@@ -39,14 +39,14 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: chrome-sheen 6s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 7px rgba(184, 255, 46, 0.22));
+  filter: drop-shadow(0 0 7px rgba(174, 255, 0, 0.22));
 }
 .chrome-bg {
   background-color: var(--neon);
   background-image: var(--chrome);
   background-size: 220% 100%;
   animation: chrome-sheen 7s ease-in-out infinite alternate;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 6px rgba(0, 0, 0, 0.18), 0 0 22px -8px rgba(184, 255, 46, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 6px rgba(0, 0, 0, 0.18), 0 0 22px -8px rgba(174, 255, 0, 0.45);
 }
 .chrome-surface {
   background-color: #b5f51a;
@@ -58,7 +58,7 @@
   background-image: var(--chrome);
   background-size: 220% 100%;
   animation: chrome-sheen 5s ease-in-out infinite alternate;
-  box-shadow: 0 0 10px rgba(184, 255, 46, 0.4);
+  box-shadow: 0 0 10px rgba(174, 255, 0, 0.4);
 }
 /* Performance: the sheen repaints every frame, so it only runs on elements
    that are on screen (SheenPauser sets data-sheen-on), and never on phones —
@@ -72,7 +72,7 @@
 
 /* ---------- wild scroll extras ---------- */
 html.lenis-smooth { scroll-behavior: auto !important; }
-::selection { background: #b8ff2e; color: #000; }
+::selection { background: #AEFF00; color: #000; }
 
 .text-outline {
   -webkit-text-fill-color: transparent;

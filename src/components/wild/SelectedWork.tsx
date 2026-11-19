@@ -138,7 +138,7 @@ function Slides({ images, interval, offset, running, pos }: { images: string[]; 
           <span key={k} className="h-[2px] flex-1 overflow-hidden rounded-full bg-white/25">
             <span
               key={k === i ? `on-${i}` : "off"}
-              className="block h-full origin-left bg-[#b8ff2e]"
+              className="block h-full origin-left bg-[#AEFF00]"
               style={{
                 transform: k < i ? "scaleX(1)" : "scaleX(0)",
                 animation: k === i && running ? `work-bar ${k === 0 && i === 0 ? offset : interval}ms linear forwards` : undefined,
@@ -265,7 +265,7 @@ export function SelectedWork() {
           </p>
           <span className="inline-flex shrink-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em]">
             Full archive
-            <span className="grid size-9 place-items-center rounded-full bg-black text-[#b8ff2e] transition-transform duration-300 group-hover:translate-y-1">
+            <span className="grid size-9 place-items-center rounded-full bg-black text-[#AEFF00] transition-transform duration-300 group-hover:translate-y-1">
               <ArrowDown className="size-4" />
             </span>
           </span>
