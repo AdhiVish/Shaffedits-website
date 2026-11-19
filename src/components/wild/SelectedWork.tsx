@@ -15,6 +15,8 @@ type Project = {
   images: string[];
   /** grid placement classes for phone / desktop */
   area: string;
+  /** object-position for the slides (defaults to centre) */
+  pos?: string;
   big?: boolean;
 };
 
@@ -62,7 +64,9 @@ const PROJECTS: Project[] = [
   {
     client: "Purple Curve",
     tags: ["Social media", "Meta ads"],
-    area: "",
+    area: "col-span-2 lg:col-span-2",
+    // portrait fashion shots in a wide tile: keep the faces in frame
+    pos: "center 8%",
     images: [
       pf(SOCIAL, "Purplecurve_Carousel01_042026_Slide01 copy.webp"),
       pf(SOCIAL, "Purplecurve_Carousel05_032026_Slide1 copy.webp"),
@@ -70,18 +74,12 @@ const PROJECTS: Project[] = [
       pf(SOCIAL, "Purplecurve_Carousel06_042026_Slide01 copy.webp"),
     ],
   },
-  {
-    client: "Identity systems",
-    tags: ["Logos", "Brand guidelines"],
-    area: "",
-    images: ["b5", "b2", "b9", "b3", "b1", "b6"].map((b) => pf(BRAND, `${b} copy.webp`)),
-  },
 ];
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /** Cycles through a client's pieces: each new one wipes in over the last. */
-function Slides({ images, interval, offset, running }: { images: string[]; interval: number; offset: number; running: boolean }) {
+function Slides({ images, interval, offset, running, pos }: { images: string[]; interval: number; offset: number; running: boolean; pos?: string }) {
   const [i, setI] = useState(0);
   const ready = useRef<Set<number>>(new Set([0]));
 
@@ -127,6 +125,7 @@ function Slides({ images, interval, offset, running }: { images: string[]; inter
           alt=""
           draggable={false}
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: pos }}
           initial={{ clipPath: "inset(0 0 0 100%)", scale: 1.15 }}
           animate={{ clipPath: "inset(0 0 0 0%)", scale: 1 }}
           exit={{ opacity: 1, transition: { duration: 1 } }}
@@ -160,7 +159,7 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
       transition={{ duration: 1.1, delay: 0.15 + index * 0.1, ease: EASE }}
       className={`relative min-h-0 overflow-hidden rounded-2xl bg-neutral-900 md:rounded-3xl ${p.area}`}
     >
-      <Slides images={p.images} interval={p.big ? 3200 : 2700 + index * 230} offset={1400 + index * 520} running={show} />
+      <Slides pos={p.pos} images={p.images} interval={p.big ? 3200 : 2700 + index * 230} offset={1400 + index * 520} running={show} />
 
       {/* legibility gradient + client name */}
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/15 to-black/30" />
@@ -248,7 +247,7 @@ export function SelectedWork() {
         </motion.p>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[1.35fr_1fr_1fr_auto] gap-2.5 md:gap-4 lg:grid-cols-5 lg:grid-rows-2">
+      <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[1.3fr_1fr_0.9fr_auto] gap-2.5 md:gap-4 lg:grid-cols-5 lg:grid-rows-2">
         {PROJECTS.map((p, i) => (
           <Tile key={p.client} p={p} index={i} show={show} />
         ))}
