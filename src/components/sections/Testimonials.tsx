@@ -40,7 +40,7 @@ export function Testimonials() {
     <section className="bg-black px-6 py-28 text-white md:py-40">
       <div className="mx-auto max-w-4xl text-center">
         <p className="mb-6 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
-          Client Reviews / 06
+          Client Reviews / 05
         </p>
         <Quote className="mx-auto mb-8 h-10 w-10 text-white/30" strokeWidth={1.5} />
         <div className="relative min-h-55">

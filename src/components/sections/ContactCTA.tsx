@@ -64,7 +64,7 @@ export function ContactCTA() {
           className="md:col-span-5"
         >
           <p className="mb-6 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
-            Contact / 07
+            Contact / 06
           </p>
           <h2 className="font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-tight">
             Ready to build something <span className="italic font-light text-white/60">remarkable</span>?

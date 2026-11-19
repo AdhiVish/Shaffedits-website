@@ -1,13 +1,5 @@
-import { useLayoutEffect, useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  useVelocity,
-  type MotionValue,
-} from "motion/react";
-import { useJsScroll } from "@/components/wild/useJsScroll";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { motion, useInView, useMotionValue, useSpring } from "motion/react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
@@ -25,146 +17,210 @@ const IMAGES: Record<string, string> = {
   "website-design-development": pf("E-Commerce Store + Website", "Lspace Website copy.webp"),
 };
 
-const THEMES = [
-  "chrome-bg text-black",
-  "bg-white text-black",
-  "bg-neutral-950 text-white ring-1 ring-white/15",
-];
+/** Card finishes, arranged so no two neighbours match on the 3 x 2 desktop grid. */
+const THEMES = ["chrome", "dark", "white", "dark", "white", "chrome"] as const;
+const THEME_CLS: Record<(typeof THEMES)[number], string> = {
+  chrome: "chrome-bg text-black",
+  white: "bg-white text-black",
+  dark: "bg-neutral-950 text-white ring-1 ring-white/15",
+};
+/** How far each card is turned while it sits in the deck before being dealt. */
+const DECK_TILT = [-14, 9, -6, 12, -10, 7];
 
-function ServiceCard({ index, lean }: { index: number; lean: MotionValue<number> }) {
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+function useMedia(q: string) {
+  const [m, setM] = useState(() => window.matchMedia(q).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(q);
+    const on = () => setM(mq.matches);
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, [q]);
+  return m;
+}
+
+function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; cols: 2 | 3 }) {
   const s = services[index];
   const Icon = s.icon;
+  const ref = useRef<HTMLElement>(null);
+  const still = useMedia("(prefers-reduced-motion: reduce)");
+
+  // Where this card sits relative to the middle of the grid: the deck it is dealt from.
+  const rows = 6 / cols;
+  const dx = ((cols - 1) / 2 - (index % cols)) * 104;
+  const dy = ((rows - 1) / 2 - Math.floor(index / cols)) * 104;
+
+  // 3D tilt toward the cursor; the cursor position also drives the photo reveal (CSS vars).
+  const rx = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
+  const ry = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
+  const move = (e: MouseEvent<HTMLElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const b = el.getBoundingClientRect();
+    const x = (e.clientX - b.left) / b.width;
+    const y = (e.clientY - b.top) / b.height;
+    el.style.setProperty("--mx", `${x * 100}%`);
+    el.style.setProperty("--my", `${y * 100}%`);
+    if (still) return;
+    ry.set((x - 0.5) * 10);
+    rx.set(-(y - 0.5) * 10);
+  };
+  const leave = () => {
+    rx.set(0);
+    ry.set(0);
+  };
+
   return (
     <motion.article
-      style={{ skewX: lean, rotate: index % 2 ? 1.5 : -1.5 }}
-      className={`group relative flex h-[70svh] w-[82vw] shrink-0 flex-col overflow-hidden rounded-[2rem] sm:w-[60vw] lg:w-[34vw] ${
-        THEMES[index % 3]
-      }`}
+      ref={ref}
+      onMouseMove={move}
+      onMouseLeave={leave}
+      initial={still ? { opacity: 0 } : { x: `${dx}%`, y: `${dy}%`, rotate: DECK_TILT[index], scale: 0.82, opacity: 0 }}
+      animate={dealt ? { x: "0%", y: "0%", rotate: 0, scale: 1, opacity: 1 } : undefined}
+      transition={{
+        type: "spring",
+        stiffness: 110,
+        damping: 16,
+        delay: 0.25 + (5 - index) * 0.07,
+        opacity: { duration: 0.35, delay: index * 0.04 },
+      }}
+      style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000, zIndex: 10 - index }}
+      className={`svc-card group relative isolate min-h-0 overflow-hidden rounded-2xl transition-[filter] duration-500 group-hover/grid:[filter:brightness(.45)_saturate(.6)] hover:![filter:none] md:rounded-[1.6rem] ${THEME_CLS[THEMES[index]]}`}
     >
-      <Link
-        to={s.path}
-        data-cursor="Open"
-        className="absolute inset-0 z-20"
-        aria-label={`${s.title}: ${s.cta}`}
-      />
-      <div className="relative h-[52%] overflow-hidden">
+      <Link to={s.path} data-cursor="Open" className="absolute inset-0 z-30" aria-label={`${s.title}: ${s.cta}`} />
+
+      {/* photo, revealed in a circle that grows from the cursor */}
+      <div className="svc-reveal absolute inset-0 -z-10">
         <img
           src={IMAGES[s.slug]}
           alt=""
           loading="lazy"
           draggable={false}
-          className="h-full w-full scale-110 object-cover grayscale transition-all duration-700 ease-out group-hover:scale-100 group-hover:grayscale-0"
+          className="h-full w-full scale-110 object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-100"
         />
-        <span className="absolute left-5 top-4 font-display text-[5.5rem] font-black leading-none text-white mix-blend-difference md:text-[7rem]">
-          0{index + 1}
-        </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
       </div>
-      <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
-        <div>
-          <Icon className="mb-4 h-6 w-6" strokeWidth={1.6} />
-          <h3 className="font-display text-3xl font-black leading-[0.95] tracking-tight md:text-4xl">{s.title}</h3>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed opacity-70">{s.desc}</p>
+
+      {/* a slow shine that sweeps across now and then */}
+      <span aria-hidden className="svc-shine pointer-events-none absolute inset-0 -z-[5]" style={{ animationDelay: `${index * 1.3}s` }} />
+
+      <div className="relative flex h-full flex-col justify-between p-4 transition-colors duration-500 group-hover:text-white md:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <span className="svc-num font-display text-[clamp(2.6rem,6.5vh,5.5rem)] font-black leading-[0.8] tracking-tighter">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="grid size-9 shrink-0 place-items-center rounded-full border border-current/25 transition-transform duration-700 group-hover:rotate-[360deg] md:size-11">
+            <Icon className="size-4 md:size-5" strokeWidth={1.7} />
+          </span>
         </div>
-        <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em]">
-          {s.cta}
-          <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
-        </span>
+
+        <div>
+          {/* the title rolls up to a neon copy of itself on hover */}
+          <h3 className="relative overflow-hidden font-display text-[clamp(1rem,2.1vw,1.9rem)] font-black leading-[1.02] tracking-tight">
+            <span className="block transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-full">
+              {s.title}
+            </span>
+            <span
+              aria-hidden
+              className="absolute inset-0 block translate-y-full text-[#b8ff2e] transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-y-0"
+            >
+              {s.title}
+            </span>
+          </h3>
+          <p className="mt-2 line-clamp-2 hidden max-w-sm text-sm leading-snug opacity-70 md:block [@media(max-height:760px)]:hidden">
+            {s.desc}
+          </p>
+          <span className="mt-3 hidden items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] sm:inline-flex">
+            {s.cta}
+            <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
+          </span>
+        </div>
       </div>
     </motion.article>
   );
 }
 
+/** One heading line whose words rise out of a mask once the section is in view. */
+function Rise({ words, show, delay = 0, accent }: { words: string[]; show: boolean; delay?: number; accent?: number }) {
+  return (
+    <span className="block">
+      {words.map((w, i) => (
+        <span key={i} className="inline-block overflow-hidden pb-[0.08em] align-bottom">
+          <motion.span
+            className={"inline-block " + (i === accent ? "chrome-text pr-[0.08em] font-light italic" : "")}
+            initial={{ y: "110%" }}
+            animate={show ? { y: "0%" } : undefined}
+            transition={{ duration: 0.9, delay: delay + i * 0.07, ease: EASE }}
+          >
+            {w}
+            {i < words.length - 1 ? " " : ""}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /**
- * The page turns sideways: vertical scrolling drives a horizontal track of
- * service cards. The cards lean into the direction of travel.
+ * What we do: all six services on one screen, no sideways scrolling.
+ * When the section comes into view the cards are dealt out from a stack in
+ * the middle; hovering a card tilts it, dims the others and reveals its photo
+ * from the cursor.
  */
 export function WildServices() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const dist = useMotionValue(0);
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      const t = trackRef.current;
-      const s = sectionRef.current;
-      if (!t || !s) return;
-      const d = Math.max(0, t.scrollWidth - window.innerWidth);
-      dist.set(d);
-      s.style.height = `${d + window.innerHeight}px`;
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (trackRef.current) ro.observe(trackRef.current);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [dist]);
-
-  const { scrollYProgress: p, scrollY } = useJsScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  const x = useTransform(() => -p.get() * dist.get());
-  const bgX = useTransform(p, [0, 1], ["0%", "-40%"]);
-  const velocity = useVelocity(scrollY);
-  const lean = useSpring(useTransform(velocity, [-3000, 3000], [10, -10]), { stiffness: 200, damping: 30 });
-  const progressBar = useTransform(p, [0, 1], [0, 1]);
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.35 });
+  const desktop = useMedia("(min-width: 1024px)");
 
   return (
-    <section id="services" ref={sectionRef} className="relative bg-black text-white" style={{ height: "500vh" }}>
-      <div className="sticky top-0 h-svh overflow-hidden">
-        {/* giant outlined word drifting behind */}
-        <motion.div
-          aria-hidden
-          style={{ x: bgX }}
-          className="text-outline pointer-events-none absolute bottom-[-4vw] left-0 whitespace-nowrap font-display text-[28vw] font-black uppercase leading-none text-white/10"
-        >
-          disciplines disciplines
-        </motion.div>
+    <section
+      id="services"
+      ref={ref}
+      className="relative flex h-svh min-h-[640px] flex-col overflow-hidden bg-black px-4 pb-5 pt-24 text-white md:px-10 md:pb-8 md:pt-28 lg:px-16"
+    >
+      {/* giant outlined word drifting behind */}
+      <motion.div
+        aria-hidden
+        initial={{ x: "8%" }}
+        animate={{ x: "-30%" }}
+        transition={{ duration: 40, repeat: Infinity, repeatType: "mirror", ease: "linear" }}
+        className="text-outline pointer-events-none absolute bottom-[-5vw] left-0 whitespace-nowrap font-display text-[26vw] font-black uppercase leading-none text-white/[0.07]"
+      >
+        disciplines disciplines
+      </motion.div>
 
-        <motion.div ref={trackRef} style={{ x }} className="relative flex h-full w-max items-center gap-8 px-6 md:gap-12 md:px-16">
-          <div className="flex w-[82vw] shrink-0 flex-col justify-center sm:w-[60vw] lg:w-[40vw]">
-            <p className="mb-6 text-xs font-medium uppercase tracking-[0.4em] text-white/50">What We Do / 02</p>
-            <h2 className="font-display text-[clamp(2.6rem,6vw,6rem)] font-black leading-[0.9] tracking-tight">
-              Six disciplines.
-              <br />
-              One creative <span className="chrome-text pr-[0.08em] font-light italic">engine.</span>
-            </h2>
-            <p className="mt-8 flex items-center gap-3 text-sm text-white/60">
-              <motion.span
-                animate={{ x: [0, 12, 0] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-                className="chrome-text text-2xl"
-              >
-                →
-              </motion.span>
-              keep scrolling down. yes, down. it goes sideways now.
-            </p>
-          </div>
-
-          {services.map((_, i) => (
-            <ServiceCard key={services[i].slug} index={i} lean={lean} />
-          ))}
-
-          <div className="flex w-[82vw] shrink-0 flex-col justify-center sm:w-[60vw] lg:w-[36vw]">
-            <h3 className="font-display text-[clamp(2.4rem,5vw,5rem)] font-black leading-[0.9] tracking-tight">
-              That's all six.
-              <br />
-              <span className="font-light italic text-white/60">Yes, we do it all.</span>
-            </h3>
-            <a
-              href="#contact"
-              data-cursor="Hi!"
-              className="mt-10 inline-flex w-fit items-center gap-3 chrome-bg rounded-full px-8 py-4 text-sm font-bold uppercase tracking-wider text-black transition-transform hover:-rotate-3 hover:scale-105"
-            >
-              Pick one, or all <ArrowUpRight className="h-4 w-4" />
-            </a>
-          </div>
-        </motion.div>
-
-        {/* progress rail */}
-        <div className="absolute bottom-6 left-6 right-6 h-px bg-white/15 md:left-16 md:right-16">
-          <motion.div style={{ scaleX: progressBar }} className="neon-line h-full origin-left" />
+      <div className="relative mb-4 flex flex-wrap items-end justify-between gap-x-10 gap-y-3 md:mb-6">
+        <div>
+          <motion.p
+            initial={{ opacity: 0, letterSpacing: "0.8em" }}
+            animate={inView ? { opacity: 1, letterSpacing: "0.4em" } : undefined}
+            transition={{ duration: 1, ease: EASE }}
+            className="mb-2 text-[10px] font-medium uppercase text-white/50 md:mb-3 md:text-xs"
+          >
+            What We Do / 01
+          </motion.p>
+          <h2 className="font-display text-[clamp(1.9rem,4.2vw,4rem)] font-black leading-[0.95] tracking-tight">
+            <Rise words={["Six", "disciplines."]} show={inView} />
+            <Rise words={["One", "creative", "engine."]} show={inView} delay={0.15} accent={2} />
+          </h2>
         </div>
+        <motion.a
+          href="#contact"
+          data-cursor="Hi!"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
+          className="chrome-bg hidden w-fit items-center gap-3 rounded-full px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-black transition-transform hover:-rotate-3 hover:scale-105 sm:inline-flex"
+        >
+          Pick one, or all <ArrowUpRight className="h-4 w-4" />
+        </motion.a>
+      </div>
+
+      <div className="group/grid relative grid min-h-0 flex-1 grid-cols-2 grid-rows-3 gap-2.5 md:gap-4 lg:grid-cols-3 lg:grid-rows-2">
+        {services.map((sv, i) => (
+          <ServiceCard key={sv.slug} index={i} dealt={inView} cols={desktop ? 3 : 2} />
+        ))}
       </div>
     </section>
   );

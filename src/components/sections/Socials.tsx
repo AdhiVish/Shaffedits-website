@@ -48,7 +48,7 @@ export function Socials() {
     >
       <div className="mx-auto max-w-6xl text-center">
         <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
-          On the Feed / 03c
+          On the Feed / 02c
         </p>
         <h2
           id="socials-title"

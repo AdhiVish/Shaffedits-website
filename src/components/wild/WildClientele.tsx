@@ -43,7 +43,7 @@ export function WildClientele() {
   return (
     <section className="overflow-hidden bg-white py-24 text-black md:py-32">
       <div className="mx-auto mb-14 max-w-4xl px-6 text-center">
-        <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-black/50">Clientele / 05</p>
+        <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-black/50">Clientele / 04</p>
         <h2 className="font-display text-[clamp(2rem,4.5vw,3.5rem)] font-black leading-none tracking-tight">
           Brands that trust <span className="font-light italic text-black/50">Shaffedits</span>
         </h2>

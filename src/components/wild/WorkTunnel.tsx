@@ -94,7 +94,7 @@ export function WorkTunnel() {
           style={{ scale: titleScale, opacity: titleOpacity }}
           className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center mix-blend-difference"
         >
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/70">Featured Work / 03</p>
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/70">Featured Work / 02</p>
           <h2 className="font-display text-[clamp(3rem,11vw,10rem)] font-black uppercase leading-[0.85] tracking-tighter">
             Selected
             <br />

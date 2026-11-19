@@ -11,7 +11,7 @@ export function Portfolio() {
     <section id="archive" className="featured-work" aria-labelledby="featured-work-title">
       <div className="fw-heading">
         <div>
-          <p className="fw-eyebrow">The Archive / 03b</p>
+          <p className="fw-eyebrow">The Archive / 02b</p>
           <h2 id="featured-work-title">Everything <span>else</span></h2>
         </div>
         <div className="fw-heading__aside">

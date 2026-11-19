@@ -393,7 +393,7 @@ export function Team() {
         >
           <div>
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
-              Our Team / 04
+              Our Team / 03
             </p>
             <h2 className="max-w-3xl font-display text-[clamp(2rem,5vw,4rem)] font-black leading-none tracking-tight">
               The people behind the <span className="italic font-light text-white/60">work</span>
