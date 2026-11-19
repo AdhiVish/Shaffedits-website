@@ -20,7 +20,7 @@ export function Footer() {
         <div className="text-sm">
           <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-white/40">Explore</p>
           <ul className="space-y-2">
-            <li><Link to={resolveHref("#about")} className="hover:text-white">About</Link></li>
+            <li><Link to="/about" className="hover:text-white">About</Link></li>
             <li><Link to={resolveHref("#services")} className="hover:text-white">Services</Link></li>
             <li><Link to={resolveHref("#work")} className="hover:text-white">Work</Link></li>
             <li><Link to={resolveHref("#team")} className="hover:text-white">Team</Link></li>

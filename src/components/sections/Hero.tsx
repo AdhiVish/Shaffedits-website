@@ -150,20 +150,20 @@ export function Hero() {
   // The hero is only a little taller than the screen: one short pinned beat, then straight on to the next section.
   const { scrollYProgress: p } = useJsScroll({ target: sectionRef, offset: ["start start", "end end"] });
 
-  const headScale = useTransform(p, [0, 0.6], [1, 0.72]);
-  const headOpacity = useTransform(p, [0.05, 0.5], [1, 0]);
-  const headBlur = useTransform(p, [0.05, 0.5], ["blur(0px)", "blur(14px)"]);
-  const line1X = useTransform(p, [0, 0.6], ["0vw", "-38vw"]);
-  const line2X = useTransform(p, [0, 0.6], ["0vw", "38vw"]);
-  const subY = useTransform(p, [0, 0.45], ["0vh", "18vh"]);
+  const headScale = useTransform(p, [0, 0.4], [1, 0.72]);
+  const headOpacity = useTransform(p, [0, 0.35], [1, 0]);
+  const headBlur = useTransform(p, [0, 0.35], ["blur(0px)", "blur(14px)"]);
+  const line1X = useTransform(p, [0, 0.4], ["0vw", "-38vw"]);
+  const line2X = useTransform(p, [0, 0.4], ["0vw", "38vw"]);
+  const subY = useTransform(p, [0, 0.35], ["0vh", "18vh"]);
   const ribbonsY = useTransform(p, [0, 0.4], ["0%", "160%"]);
   const hintOpacity = useTransform(p, [0, 0.08], [1, 0]);
 
-  // The dimmed Shaffedits logo behind the hero: as you scroll it brightens and rises,
-  // then carries on up the screen with the hero as the next section arrives.
-  const logoOpacity = useTransform(p, [0, 0.6], [0.07, 0.35]);
-  const logoY = useTransform(p, [0, 1], ["0vh", "-14vh"]);
-  const logoScale = useTransform(p, [0, 1], [1, 1.12]);
+  // The dimmed Shaffedits logo behind the hero: it brightens while the words fade out,
+  // and only once they're gone does it rise, carrying on up as the next section arrives.
+  const logoOpacity = useTransform(p, [0, 0.38], [0.07, 0.35]);
+  const logoY = useTransform(p, [0.4, 1], ["0vh", "-24vh"]);
+  const logoScale = useTransform(p, [0, 0.4, 1], [1, 1.06, 1.12]);
 
   // Cursor spotlight + card parallax: written straight to CSS variables (no re-renders).
   useEffect(() => {
@@ -212,7 +212,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="top" className="relative h-[150vh] bg-black text-white">
+    <section ref={sectionRef} id="top" className="relative h-[170vh] bg-black text-white">
       <div
         ref={stageRef}
         className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-6 pb-40 pt-36"

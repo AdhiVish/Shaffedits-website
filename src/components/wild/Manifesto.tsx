@@ -45,14 +45,21 @@ function Pic({ src, range, progress }: { src: string; range: [number, number]; p
   );
 }
 
-export function Manifesto() {
+/** The About content. On the home page it was a section; `page` renders it as the /about page. */
+export function Manifesto({ page = false }: { page?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useJsScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
   const stickerSpin = useTransform(scrollYProgress, [0, 1], [0, 540]);
   const n = tokens.length;
 
   return (
-    <section id="about" className="relative overflow-hidden chrome-surface px-6 pb-32 pt-24 text-black md:pb-48 md:pt-32">
+    <section
+      id="about"
+      className={
+        "relative overflow-hidden chrome-surface px-6 text-black " +
+        (page ? "min-h-svh pb-32 pt-36 md:pb-48 md:pt-44" : "pb-32 pt-24 md:pb-48 md:pt-32")
+      }
+    >
       <div className="mx-auto max-w-6xl">
         <p className="mb-10 flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.4em]">
           About / 01 <span className="font-normal normal-case tracking-normal opacity-60">(the part where we talk about ourselves)</span>
@@ -77,7 +84,7 @@ export function Manifesto() {
             refreshing or scaling, we become an extension of your team.
           </p>
           <div className="flex items-center gap-8 md:col-span-5 md:justify-end">
-            <GlowButton as="a" href="#contact" tone="onLight">
+            <GlowButton as="a" href={page ? "/#contact" : "#contact"} tone="onLight">
               Let's Build Your Brand
             </GlowButton>
             <motion.div

@@ -6,11 +6,12 @@ import { NavLink } from "../ui/NavLink";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-white.png";
 
-// Navigation links point to sections on the homepage, so from any
+// Most links point to sections on the homepage, so from any
 // other page they need the "/#section" form
 // to first navigate home and then scroll (see ScrollToHash).
+// About is its own page.
 const links = [
-  { href: "#about", label: "About" },
+  { href: "/about", label: "About" },
   { href: "#services", label: "Services" },
   { href: "#work", label: "Work" },
   { href: "#team", label: "Team" },
@@ -23,6 +24,8 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const { pathname } = useLocation();
   const isHome = pathname === "/";
+  // The About page is lime from the very top, so the bar needs its solid dark look there.
+  const solid = scrolled || pathname === "/about";
 
   const lastScrollY = useRef(0);
 
@@ -78,7 +81,7 @@ export function Navbar() {
         }}
         className={cn(
           "relative overflow-hidden border backdrop-blur-2xl transition-all duration-300",
-          scrolled
+          solid
             ? "border-white/15 bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
             : "border-white/10 bg-white/[0.05]"
         )}

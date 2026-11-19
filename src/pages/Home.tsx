@@ -4,7 +4,6 @@ import { Team } from "@/components/sections/Team";
 import { Socials } from "@/components/sections/Socials";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { ContactCTA } from "@/components/sections/ContactCTA";
-import { Manifesto } from "@/components/wild/Manifesto";
 import { ServiceBands, WildServices } from "@/components/wild/WildServices";
 import { Stats } from "@/components/wild/Stats";
 import { WorkTunnel } from "@/components/wild/WorkTunnel";
@@ -19,7 +18,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Manifesto />
       <ServiceBands />
       <WildServices />
       <Stats />

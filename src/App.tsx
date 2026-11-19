@@ -9,6 +9,7 @@ import { SheenPauser } from "@/components/wild/SheenPauser";
 import { Grain, ScrollHUD } from "@/components/wild/ScrollHUD";
 
 import Home from "@/pages/Home";
+import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
 
 import BrandingDesign from "@/pages/services/BrandingDesign";
@@ -32,6 +33,7 @@ function App() {
       <main className="bg-black">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
 
           <Route path="/services" element={<Navigate to="/#services" replace />} />
           <Route path="/services/branding-design" element={<BrandingDesign />} />
