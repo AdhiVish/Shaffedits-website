@@ -6,7 +6,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { ContactCTA } from "@/components/sections/ContactCTA";
 import { ServiceBands, WildServices } from "@/components/wild/WildServices";
 import { Stats } from "@/components/wild/Stats";
-import { WorkTunnel } from "@/components/wild/WorkTunnel";
+import { SelectedWork } from "@/components/wild/SelectedWork";
 import { WildClientele } from "@/components/wild/WildClientele";
 import { BigOutro } from "@/components/wild/BigOutro";
 
@@ -21,7 +21,7 @@ export default function Home() {
       <ServiceBands />
       <WildServices />
       <Stats />
-      <WorkTunnel />
+      <SelectedWork />
       <Portfolio />
       <Socials />
       <Team />
