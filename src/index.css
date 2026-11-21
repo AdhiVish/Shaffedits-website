@@ -8,6 +8,9 @@
 
 @layer base {
   html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+  /* phones: never let anything wider than the screen make the page swipe sideways */
+  html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
+  @supports (overflow: clip) { html, body { overflow-x: clip; } }
   body {
     background-color: #fff;
     color: #000;
