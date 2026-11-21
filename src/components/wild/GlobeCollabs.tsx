@@ -220,7 +220,7 @@ export function GlobeCollabs() {
 
       <div className="relative order-1 mx-auto w-full max-w-[560px] md:order-2">
         {/* soft white halo behind the globe */}
-        <div aria-hidden className="pointer-events-none absolute inset-[8%] rounded-full bg-white/[0.06] blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -inset-[4%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.06),rgba(255,255,255,0.025)_60%,transparent)]" />
         <motion.div
           initial={{ opacity: 0, scale: 0.85, rotate: -8 }}
           animate={shown ? { opacity: 1, scale: 1, rotate: 0 } : undefined}

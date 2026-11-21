@@ -375,8 +375,8 @@ export function Team() {
       {/* Light behind the hand, tinted to the suit on the table */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[46%] h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]"
-        animate={{ backgroundColor: `${color}18` }}
+        className="pointer-events-none absolute left-1/2 top-[46%] h-[54rem] w-[54rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        animate={{ backgroundImage: `radial-gradient(closest-side, ${color}20, ${color}0c 55%, ${color}00)` }}
         transition={{ duration: 0.8 }}
       />
 
