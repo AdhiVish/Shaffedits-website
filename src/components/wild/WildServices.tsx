@@ -5,6 +5,18 @@ import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
 import { VelocityMarquee } from "./VelocityMarquee";
 
+const base = import.meta.env.BASE_URL;
+const pf = (folder: string, file: string) => `${base}portfolio/${folder}/${file}`;
+
+const IMAGES: Record<string, string> = {
+  "branding-design": pf("Branding + Presentation", "b13 copy.webp"),
+  "content-creation-animation": `${base}showcase/t01.webp`,
+  "social-media-management": pf("Creative Campaign + Social Media", "Lspace_Carousel01_062026_Slide1 copy.webp"),
+  "videography-photography": `${base}showcase/t05.webp`,
+  "meta-ads": pf("Creative Campaign + Social Media", "Purplecurve_Static01_022026 copy.webp"),
+  "website-design-development": pf("E-Commerce Store + Website", "Lspace Website copy.webp"),
+};
+
 /**
  * Card covers stay black and white, alternating: 1 black, 2 white, 3 black…
  * On hover the text picks up the accent: lime on the black cards, blue on the white ones.
@@ -79,10 +91,22 @@ function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; co
     >
       <Link to={s.path} data-cursor="Open" className="absolute inset-0 z-30" aria-label={`${s.title}: ${s.cta}`} />
 
+      {/* photo, revealed in a circle that grows from the cursor */}
+      <div className="svc-reveal absolute inset-0 -z-10">
+        <img
+          src={IMAGES[s.slug]}
+          alt=""
+          loading="lazy"
+          draggable={false}
+          className="h-full w-full scale-110 object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-100"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+      </div>
+
       {/* a slow shine that sweeps across now and then */}
       <span aria-hidden className="svc-shine pointer-events-none absolute inset-0 -z-[5]" style={{ animationDelay: `${index * 1.3}s` }} />
 
-      <div className="relative flex h-full flex-col justify-between p-4 md:p-6">
+      <div className="relative flex h-full flex-col justify-between p-4 transition-colors duration-500 group-hover:text-white md:p-6">
         <div className="flex items-start justify-between gap-3">
           <span className="svc-num font-display text-[clamp(2.6rem,6.5vh,5.5rem)] font-black leading-[0.8] tracking-tighter">
             {String(index + 1).padStart(2, "0")}

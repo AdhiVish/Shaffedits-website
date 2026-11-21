@@ -1,5 +1,18 @@
 /* ---------- What we do cards (WildServices) ---------- */
 
+/* photo revealed in a circle that grows out from the cursor (--mx/--my set on mousemove) */
+.svc-reveal {
+  clip-path: circle(0% at var(--mx, 50%) var(--my, 50%));
+  transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.svc-card:hover .svc-reveal {
+  clip-path: circle(150% at var(--mx, 50%) var(--my, 50%));
+}
+/* touch screens have no hover: keep the black/white covers plain */
+@media (hover: none) {
+  .svc-reveal { display: none; }
+}
+
 /* accent per card cover: lime on black, blue on white */
 .svc-dark { --svc-acc: #aeff00; --svc-fill: linear-gradient(105deg, #97e000, #aeff00 40%, #c6ff52 55%, #93da00); }
 .svc-light { --svc-acc: #2641ff; --svc-fill: var(--chrome); }
