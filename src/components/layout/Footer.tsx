@@ -1,5 +1,36 @@
+import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { motion, useTransform } from "motion/react";
+import { useJsScroll } from "@/components/wild/useJsScroll";
 import logoWhite from "@/assets/logo-white.png";
+
+/** The big footer logo: a dim copy, with the solid white one sweeping in across it as you reach the bottom. */
+function FillLogo() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: p } = useJsScroll({ target: ref, offset: ["start end", "end end"] });
+  const clip = useTransform(p, [0.1, 1], ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]);
+  const y = useTransform(p, [0, 1], [60, 0]);
+  return (
+    <motion.div ref={ref} style={{ y }} className="relative mx-auto mt-14 max-w-6xl">
+      <img
+        src={logoWhite}
+        alt="Shaffedits"
+        loading="lazy"
+        draggable={false}
+        className="block h-auto w-full select-none opacity-[0.12]"
+      />
+      <motion.img
+        src={logoWhite}
+        alt=""
+        aria-hidden
+        loading="lazy"
+        draggable={false}
+        style={{ clipPath: clip }}
+        className="absolute inset-0 block h-auto w-full select-none"
+      />
+    </motion.div>
+  );
+}
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -37,16 +68,8 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      {/* the full white logo, as wide as the divider line below it */}
-      <div className="mx-auto mt-14 flex max-w-6xl justify-center">
-        <img
-          src={logoWhite}
-          alt="Shaffedits"
-          loading="lazy"
-          className="block h-auto w-full select-none"
-          draggable={false}
-        />
-      </div>
+      {/* the full white logo, as wide as the divider line below it; it fills in as you scroll down */}
+      <FillLogo />
       <div className="mx-auto mt-12 flex max-w-6xl flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center">
         <p>© {year} Shaffedits. All rights reserved.</p>
         <p>Designed and Developed by{" "} <Link to="/" className="transition-colors hover:text-white">
