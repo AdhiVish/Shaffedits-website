@@ -36,7 +36,7 @@ function Stat({ value, suffix, label, i }: { value: number; suffix: string; labe
           {suffix}
         </span>
       </span>
-      <span className="max-w-[14ch] font-display text-lg font-medium leading-tight text-[#2641FF] md:text-2xl">{label}</span>
+      <span className="max-w-[14ch] font-display text-lg font-medium leading-tight text-white md:text-2xl">{label}</span>
     </motion.div>
   );
 }

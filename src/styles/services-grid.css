@@ -1,25 +1,16 @@
 /* ---------- What we do cards (WildServices) ---------- */
 
-/* photo revealed in a circle that grows out from the cursor (--mx/--my set on mousemove) */
-.svc-reveal {
-  clip-path: circle(0% at var(--mx, 50%) var(--my, 50%));
-  transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.svc-card:hover .svc-reveal {
-  clip-path: circle(150% at var(--mx, 50%) var(--my, 50%));
-}
-/* touch screens have no hover: keep a faint photo so the cards aren't flat */
-@media (hover: none) {
-  .svc-reveal {
-    clip-path: none;
-    opacity: 0.22;
-  }
-}
+/* accent per card cover: lime on black, blue on white */
+.svc-dark { --svc-acc: #aeff00; --svc-fill: linear-gradient(105deg, #97e000, #aeff00 40%, #c6ff52 55%, #93da00); }
+.svc-light { --svc-acc: #2641ff; --svc-fill: var(--chrome); }
+.svc-acc { color: inherit; }
+.svc-card:hover .svc-acc,
+.svc-card .svc-acc[aria-hidden] { color: var(--svc-acc); }
 
 /* outlined number that fills with neon chrome on hover */
 .svc-num {
   -webkit-text-stroke: 1.5px currentColor;
-  background-image: var(--chrome);
+  background-image: var(--svc-fill, var(--chrome));
   background-repeat: no-repeat;
   background-size: 0% 100%;
   -webkit-background-clip: text;
@@ -29,7 +20,7 @@
 }
 .svc-card:hover .svc-num {
   background-size: 100% 100%;
-  -webkit-text-stroke-color: #2641FF;
+  -webkit-text-stroke-color: var(--svc-acc, #2641FF);
 }
 
 /* a soft diagonal shine that crosses each card every few seconds */

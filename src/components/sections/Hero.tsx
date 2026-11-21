@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
 import { GlowButton } from "../ui/GlowButton";
 import { ArrowButton } from "../ui/ArrowButton";
-import { VelocityMarquee } from "../wild/VelocityMarquee";
 import logoWhite from "@/assets/logo-white.png";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -118,42 +117,11 @@ function MaskedLine({
   );
 }
 
-const TICKER = [
-  "Branding & Design",
-  "Content Creation & Animation",
-  "Social Media Management",
-  "Videography & Photography",
-  "Meta Ads",
-  "Website Design & Development",
-];
-
-function Ribbon({ className, reverse, dark }: { className: string; reverse?: boolean; dark?: boolean }) {
-  return (
-    <div
-      aria-hidden
-      className={`absolute left-[-6%] w-[112%] ${className} ${
-        dark ? "border-y border-[#2641FF]/40 bg-black text-[#2641FF]" : "chrome-bg text-black"
-      }`}
-    >
-      <VelocityMarquee baseVelocity={reverse ? -2 : 2.6} innerClassName="py-2.5 md:py-3">
-        {TICKER.map((t) => (
-          <span
-            key={t}
-            className="flex shrink-0 items-center font-display text-xs font-black uppercase tracking-[0.18em] md:text-sm"
-          >
-            <span className="px-6 md:px-8">{t}</span>
-            <span aria-hidden className="text-[0.9em]">✦</span>
-          </span>
-        ))}
-      </VelocityMarquee>
-    </div>
-  );
-}
-
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const spotRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   // The hero is only a little taller than the screen: one short pinned beat, then straight on to the next section.
   const { scrollYProgress: p } = useJsScroll({ target: sectionRef, offset: ["start start", "end end"] });
@@ -164,15 +132,39 @@ export function Hero() {
   const line1X = useTransform(p, [0, 0.4], ["0vw", "-38vw"]);
   const line2X = useTransform(p, [0, 0.4], ["0vw", "38vw"]);
   const subY = useTransform(p, [0, 0.35], ["0vh", "18vh"]);
-  const ribbonsY = useTransform(p, [0, 0.4], ["0%", "160%"]);
   const hintOpacity = useTransform(p, [0, 0.08], [1, 0]);
 
-  // The dimmed Shaffedits logo behind the hero: it brightens while the words fade out,
-  // and only once they're gone does it rise, carrying on up as the next section arrives.
+  // The dimmed Shaffedits logo behind the hero sits low, level with the Book a Call / View Our Work row.
+  // It brightens and glides back to the centre while the words fade out, and only once they're
+  // gone does it rise, carrying on up as the next section arrives.
   const logoOpacity = useTransform(p, [0, 0.38], [0.07, 1]);
-  const logoY = useTransform(p, [0.4, 1], ["0vh", "-24vh"]);
+  // px from the screen centre down to the CTA row (measured below), and the screen height
+  const [drop, setDrop] = useState({ y: 0, h: typeof window === "undefined" ? 900 : window.innerHeight });
+  const logoY = useTransform(p, [0, 0.38, 1], [drop.y, 0, -0.24 * drop.h]);
   const logoScale = useTransform(p, [0, 0.4, 1], [1, 1.06, 1.12]);
   const vignette = useTransform(p, [0.05, 0.35], [1, 0]);
+
+  // Measure how far below the screen centre the CTA row sits (before any scroll transforms).
+  useEffect(() => {
+    const measure = () => {
+      const stage = stageRef.current;
+      const row = ctaRef.current;
+      if (!stage || !row) return;
+      const st = stage.getBoundingClientRect();
+      // offsetTop chain ignores transforms, so the scroll/entrance motion doesn't skew it
+      let top = 0;
+      let el: HTMLElement | null = row;
+      while (el && el !== stage) {
+        top += el.offsetTop;
+        el = el.offsetParent as HTMLElement | null;
+      }
+      setDrop({ y: Math.round(top + row.offsetHeight / 2 - st.height / 2), h: window.innerHeight });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    document.fonts?.ready.then(measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   // Leaving the home page for another route: the next visit to the hero skips the preloader wait.
   // (React's dev double-mount also unmounts once, but the URL is still the home page then.)
@@ -321,6 +313,7 @@ export function Hero() {
               Creative strategy. Exceptional storytelling. Content that performs.
             </motion.p>
             <motion.div
+              ref={ctaRef}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: wait(2.5) }}
@@ -337,7 +330,7 @@ export function Hero() {
         {/* scroll hint */}
         <motion.div
           style={{ opacity: hintOpacity }}
-          className="pointer-events-none absolute bottom-36 left-1/2 z-10 -translate-x-1/2 text-center md:bottom-40"
+          className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-center md:bottom-8"
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -351,20 +344,6 @@ export function Hero() {
               animate={{ scaleY: [0, 1, 0], y: [0, 0, 16] }}
               transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             />
-          </motion.div>
-        </motion.div>
-
-        {/* Two crossing ribbons that react to scroll speed */}
-        <motion.div
-          aria-hidden
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: wait(2.9), ease: EASE }}
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-32"
-        >
-          <motion.div style={{ y: ribbonsY }} className="absolute inset-0">
-            <Ribbon dark reverse className="bottom-9 rotate-[2.2deg] md:bottom-10" />
-            <Ribbon className="bottom-5 -rotate-[2deg] md:bottom-6" />
           </motion.div>
         </motion.div>
 

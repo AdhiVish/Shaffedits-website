@@ -21,7 +21,7 @@ function Letter({ ch, seed, progress }: { ch: string; seed: number; progress: Mo
   return (
     <motion.span
       style={{ y, rotate }}
-      whileHover={{ scaleY: 1.35, color: "#ffffff", transition: { type: "spring", stiffness: 500, damping: 10 } }}
+      whileHover={{ scaleY: 1.35, color: "#2641FF", transition: { type: "spring", stiffness: 500, damping: 10 } }}
       className="inline-block origin-bottom"
     >
       {ch === " " ? " " : ch}
@@ -40,7 +40,7 @@ export function BigOutro() {
   let seed = 1;
 
   return (
-    <section ref={ref} className="relative h-[220vh] chrome-surface text-black">
+    <section ref={ref} className="relative h-[220vh] bg-white text-black">
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-4 text-center">
         <h2 aria-label="Got an idea?" className="font-display text-[clamp(4rem,19vw,20rem)] font-black leading-[0.82] tracking-tight">
           {LINES.map((line) => (
@@ -51,7 +51,7 @@ export function BigOutro() {
             </span>
           ))}
         </h2>
-        <motion.p style={{ opacity: sub, y: subY }} className="mt-8 max-w-md text-lg font-medium md:text-xl">
+        <motion.p style={{ opacity: sub, y: subY }} className="mt-8 max-w-md text-lg font-medium text-[#2641FF] md:text-xl">
           Good. Let's make it loud. Tell us about it below ↓
         </motion.p>
         <motion.a

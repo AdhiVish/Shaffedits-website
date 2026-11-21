@@ -5,25 +5,14 @@ import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
 import { VelocityMarquee } from "./VelocityMarquee";
 
-const base = import.meta.env.BASE_URL;
-const pf = (folder: string, file: string) => `${base}portfolio/${folder}/${file}`;
-
-const IMAGES: Record<string, string> = {
-  "branding-design": pf("Branding + Presentation", "b13 copy.webp"),
-  "content-creation-animation": `${base}showcase/t01.webp`,
-  "social-media-management": pf("Creative Campaign + Social Media", "Lspace_Carousel01_062026_Slide1 copy.webp"),
-  "videography-photography": `${base}showcase/t05.webp`,
-  "meta-ads": pf("Creative Campaign + Social Media", "Purplecurve_Static01_022026 copy.webp"),
-  "website-design-development": pf("E-Commerce Store + Website", "Lspace Website copy.webp"),
-};
-
-/** Card finishes, arranged so no two neighbours match on the 3 x 2 desktop grid. */
-const THEMES = ["chrome", "dark", "white", "dark", "white", "chrome"] as const;
-const THEME_CLS: Record<(typeof THEMES)[number], string> = {
-  chrome: "chrome-bg text-black",
-  white: "bg-white text-black",
-  dark: "bg-neutral-950 text-white ring-1 ring-white/15",
-};
+/**
+ * Card covers stay black and white, alternating: 1 black, 2 white, 3 black…
+ * On hover the text picks up the accent: lime on the black cards, blue on the white ones.
+ */
+const THEME_CLS = [
+  "svc-dark bg-black text-white ring-1 ring-white/15",
+  "svc-light bg-white text-black",
+] as const;
 /** How far each card is turned while it sits in the deck before being dealt. */
 const DECK_TILT = [-14, 9, -6, 12, -10, 7];
 
@@ -86,31 +75,19 @@ function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; co
         opacity: { duration: 0.35, delay: index * 0.04 },
       }}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000, zIndex: 10 - index }}
-      className={`svc-card group relative isolate min-h-0 overflow-hidden rounded-2xl transition-[filter] duration-500 group-hover/grid:[filter:brightness(.45)_saturate(.6)] hover:![filter:none] md:rounded-[1.6rem] ${THEME_CLS[THEMES[index]]}`}
+      className={`svc-card group relative isolate min-h-0 overflow-hidden rounded-2xl transition-[filter] duration-500 group-hover/grid:[filter:brightness(.45)_saturate(.6)] hover:![filter:none] md:rounded-[1.6rem] ${THEME_CLS[index % 2]}`}
     >
       <Link to={s.path} data-cursor="Open" className="absolute inset-0 z-30" aria-label={`${s.title}: ${s.cta}`} />
-
-      {/* photo, revealed in a circle that grows from the cursor */}
-      <div className="svc-reveal absolute inset-0 -z-10">
-        <img
-          src={IMAGES[s.slug]}
-          alt=""
-          loading="lazy"
-          draggable={false}
-          className="h-full w-full scale-110 object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-100"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
-      </div>
 
       {/* a slow shine that sweeps across now and then */}
       <span aria-hidden className="svc-shine pointer-events-none absolute inset-0 -z-[5]" style={{ animationDelay: `${index * 1.3}s` }} />
 
-      <div className="relative flex h-full flex-col justify-between p-4 transition-colors duration-500 group-hover:text-white md:p-6">
+      <div className="relative flex h-full flex-col justify-between p-4 md:p-6">
         <div className="flex items-start justify-between gap-3">
           <span className="svc-num font-display text-[clamp(2.6rem,6.5vh,5.5rem)] font-black leading-[0.8] tracking-tighter">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <span className="grid size-9 shrink-0 place-items-center rounded-full border border-current/25 transition-transform duration-700 group-hover:rotate-[360deg] md:size-11">
+          <span className="svc-acc grid size-9 shrink-0 place-items-center rounded-full border border-current/25 transition-[transform,color] duration-700 group-hover:rotate-[360deg] md:size-11">
             <Icon className="size-4 md:size-5" strokeWidth={1.7} />
           </span>
         </div>
@@ -123,7 +100,7 @@ function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; co
             </span>
             <span
               aria-hidden
-              className="absolute inset-0 block translate-y-full text-[#2641FF] transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-y-0"
+              className="svc-acc absolute inset-0 block translate-y-full transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:translate-y-0"
             >
               {s.title}
             </span>
@@ -131,7 +108,7 @@ function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; co
           <p className="mt-2 line-clamp-2 hidden max-w-sm text-sm leading-snug opacity-70 md:block [@media(max-height:760px)]:hidden">
             {s.desc}
           </p>
-          <span className="mt-3 hidden items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] sm:inline-flex">
+          <span className="svc-acc mt-3 hidden items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] transition-colors duration-500 sm:inline-flex">
             {s.cta}
             <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
           </span>
@@ -185,7 +162,7 @@ export function WildServices() {
         initial={{ x: "8%" }}
         animate={{ x: "-30%" }}
         transition={{ duration: 40, repeat: Infinity, repeatType: "mirror", ease: "linear" }}
-        className="text-outline pointer-events-none absolute bottom-[-5vw] left-0 whitespace-nowrap font-display text-[26vw] font-black uppercase leading-none text-white/[0.07]"
+        className="text-outline font-band pointer-events-none absolute bottom-[-5vw] left-0 whitespace-nowrap text-[26vw] font-black uppercase leading-none text-white/[0.07]"
       >
         disciplines disciplines
       </motion.div>
@@ -234,7 +211,7 @@ export function ServiceBands() {
       <div className="-rotate-[4deg] scale-110 chrome-bg py-3 text-black">
         <VelocityMarquee baseVelocity={2.2}>
           {words.map((w) => (
-            <span key={w} className="flex items-center font-display text-5xl font-black uppercase tracking-tight md:text-8xl">
+            <span key={w} className="flex items-center font-band text-5xl uppercase md:text-8xl">
               <span className="px-6">{w}</span>
               <span className="text-4xl md:text-6xl">✦</span>
             </span>
@@ -244,7 +221,7 @@ export function ServiceBands() {
       <div className="mt-6 rotate-[3deg] scale-110 border-y border-white/20 py-3 text-white">
         <VelocityMarquee baseVelocity={-1.8}>
           {words.map((w) => (
-            <span key={w} className="flex items-center font-display text-5xl font-black uppercase tracking-tight md:text-8xl">
+            <span key={w} className="flex items-center font-band text-5xl uppercase md:text-8xl">
               <span className="text-outline px-6">{w}</span>
               <span className="chrome-text text-4xl md:text-6xl">✱</span>
             </span>
