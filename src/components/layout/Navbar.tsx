@@ -80,14 +80,14 @@ export function Navbar() {
           ease: [0.25, 1, 0.5, 1],
         }}
         className={cn(
-          "relative overflow-hidden border backdrop-blur-2xl transition-all duration-300",
+          "relative overflow-hidden border backdrop-blur-md transition-all duration-300",
           solid
             ? "border-white/15 bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
             : "border-white/10 bg-white/[0.05]"
         )}
       >
         {/* Soft glow */}
-        <div className="pointer-events-none absolute inset-0 rounded-full bg-white/[0.03] blur-2xl" />
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(120%_100%_at_50%_0%,rgba(255,255,255,0.04),transparent)]" />
 
         <div className="relative flex items-center justify-between gap-6 px-5 py-3 md:px-7">
           {/* Logo */}

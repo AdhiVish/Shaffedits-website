@@ -171,7 +171,7 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
               initial={{ opacity: 0, y: -8 }}
               animate={show ? { opacity: 1, y: 0 } : undefined}
               transition={{ delay: 0.7 + index * 0.1 + k * 0.06 }}
-              className={`rounded-full border border-white/25 bg-black/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/85 backdrop-blur-md ${
+              className={`rounded-full border border-white/25 bg-black/60 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/85 ${
                 p.big ? "" : k === 1 ? "hidden md:inline" : k > 1 ? "hidden xl:inline" : ""
               }`}
             >

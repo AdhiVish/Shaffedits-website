@@ -2,6 +2,7 @@ import { useRef, type ReactNode } from "react";
 import {
   motion,
   useAnimationFrame,
+  useInView,
   useMotionValue,
   useScroll,
   useSpring,
@@ -41,8 +42,12 @@ export function VelocityMarquee({
   const skewX = useTransform(smooth, [-2500, 2500], skew ? [14, -14] : [0, 0]);
   const x = useTransform(baseX, (v) => `${wrap(-25, -50, v)}%`);
   const dir = useRef(1);
+  const box = useRef<HTMLDivElement>(null);
+  // off screen it would still move (and repaint) every frame — skip it
+  const visible = useInView(box, { margin: "100px 0px" });
 
   useAnimationFrame((_, delta) => {
+    if (!visible) return;
     let moveBy = dir.current * baseVelocity * (delta / 1000);
     const f = factor.get();
     if (f < 0) dir.current = -1;
@@ -52,7 +57,7 @@ export function VelocityMarquee({
   });
 
   return (
-    <div className={cn("overflow-hidden whitespace-nowrap", className)}>
+    <div ref={box} className={cn("overflow-hidden whitespace-nowrap", className)}>
       <motion.div style={{ x, skewX }} className="flex w-max flex-nowrap">
         {[0, 1, 2, 3].map((k) => (
           <div key={k} aria-hidden={k > 0} className={cn("flex shrink-0 items-center", innerClassName)}>

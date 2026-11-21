@@ -128,7 +128,6 @@ export function Hero() {
 
   const headScale = useTransform(p, [0, 0.4], [1, 0.72]);
   const headOpacity = useTransform(p, [0, 0.35], [1, 0]);
-  const headBlur = useTransform(p, [0, 0.35], ["blur(0px)", "blur(14px)"]);
   const line1X = useTransform(p, [0, 0.4], ["0vw", "-38vw"]);
   const line2X = useTransform(p, [0, 0.4], ["0vw", "38vw"]);
   const subY = useTransform(p, [0, 0.35], ["0vh", "18vh"]);
@@ -236,7 +235,7 @@ export function Hero() {
         />
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[60vmax] w-[60vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.04] blur-[110px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[80vmax] w-[80vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.045),rgba(255,255,255,0.02)_55%,transparent)]"
           animate={{ x: ["-18%", "14%", "-6%", "-18%"], y: ["-10%", "8%", "14%", "-10%"], scale: [1, 1.15, 0.95, 1] }}
           transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -282,7 +281,7 @@ export function Hero() {
         />
 
         <motion.div
-          style={{ scale: headScale, opacity: headOpacity, filter: headBlur }}
+          style={{ scale: headScale, opacity: headOpacity }}
           className="relative z-10 mx-auto max-w-6xl text-center"
         >
           <motion.p
