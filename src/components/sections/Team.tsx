@@ -3,17 +3,19 @@ import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import logoWhite from "@/assets/logo-white.png";
 
-type Member = { name: string; role: string; bio?: string; image?: string };
+type Member = { name: string; role: string; bio?: string; image?: string; signature?: string };
 
 // The team, in book order. Leave `name` empty for a spot that is still to be filled.
 // Add `image` (a path under public/) once a photo arrives, and `bio` for the description.
+// The signature is drawn from the name in a handwritten font; set `signature` to an
+// image path (transparent PNG/SVG) to use a real one instead.
 const team: Member[] = [
   {
     name: "Mohammed Shafeeq",
     role: "Founder & Creative Director",
     bio: "Leads the agency's creative vision, brand strategy, client relationships, and campaign direction while ensuring every project creates meaningful business impact.",
   },
-  { name: "Juhainaah", role: "Content & Project Manager" },
+  { name: "Juhainah A", role: "Content & Project Manager" },
   { name: "Adhi", role: "Web Developer" },
   { name: "Rukshanda", role: "Video Editor" },
   { name: "", role: "" },
@@ -25,7 +27,8 @@ type Page =
   | { kind: "back" }
   | { kind: "blank" }
   | { kind: "end" }
-  | { kind: "member"; m: Member; i: number };
+  | { kind: "photo"; m: Member; i: number }
+  | { kind: "info"; m: Member; i: number };
 
 const FLIP_S = 0.9;
 const EASE = [0.45, 0, 0.2, 1] as const;
@@ -87,52 +90,83 @@ function Paper({ side, children }: { side: "left" | "right"; children?: ReactNod
   );
 }
 
-function MemberPage({ m, i, side }: { m: Member; i: number; side: "left" | "right" }) {
+const num = (i: number) => `${String(i + 1).padStart(2, "0")} / ${String(team.length).padStart(2, "0")}`;
+
+/** Left page: the photo, edge to edge. */
+function PhotoPage({ m, i, side }: { m: Member; i: number; side: "left" | "right" }) {
+  return (
+    <Paper side={side}>
+      <div className="absolute inset-[1.1em] overflow-hidden rounded-[0.6em] bg-black/[0.05] ring-1 ring-black/10">
+        {m.image ? (
+          <img src={m.image} alt={m.name} draggable={false} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-[0.7em] text-black/30">
+            <Camera className="h-[2.2em] w-[2.2em]" strokeWidth={1.3} />
+            <span className="text-[0.56em] font-medium uppercase tracking-[0.32em]">Photo coming soon</span>
+          </div>
+        )}
+        <span className="absolute left-[1em] top-[0.9em] rounded-full bg-white/80 px-[0.7em] py-[0.25em] text-[0.52em] font-semibold uppercase tracking-[0.25em] text-black/55">
+          {num(i)}
+        </span>
+      </div>
+    </Paper>
+  );
+}
+
+/** Right page: name, title, description and a signature at the bottom. */
+function InfoPage({ m, i, side }: { m: Member; i: number; side: "left" | "right" }) {
   const open = !m.name;
   return (
     <Paper side={side}>
-      <div className="absolute inset-0 flex flex-col p-[1.5em]">
+      <div className="absolute inset-0 flex flex-col px-[1.9em] pb-[1.6em] pt-[1.5em]">
         <div className="flex items-center justify-between text-[0.56em] font-medium uppercase tracking-[0.32em] text-black/40">
           <span>Shaffedits · Team</span>
-          <span>
-            {String(i + 1).padStart(2, "0")} / {String(team.length).padStart(2, "0")}
-          </span>
-        </div>
-
-        {/* photo */}
-        <div className="relative mt-[0.9em] grid aspect-[4/3.3] place-items-center overflow-hidden rounded-[0.6em] bg-black/[0.05] ring-1 ring-black/10">
-          {m.image ? (
-            <img src={m.image} alt={m.name} draggable={false} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex flex-col items-center gap-[0.6em] text-black/30">
-              <Camera className="h-[1.8em] w-[1.8em]" strokeWidth={1.4} />
-              <span className="text-[0.55em] font-medium uppercase tracking-[0.3em]">Photo coming soon</span>
-            </div>
-          )}
+          <span>{num(i)}</span>
         </div>
 
         <h3
-          className={`mt-[0.85em] font-display text-[1.65em] font-black leading-[0.95] tracking-tight ${
-            open ? "text-black/25" : ""
-          }`}
+          className={`mt-[1.6em] font-display text-[2em] font-black leading-[0.95] tracking-tight ${open ? "text-black/25" : ""}`}
         >
           {open ? "Coming soon" : m.name}
         </h3>
-        <p className="mt-[0.5em] text-[0.6em] font-semibold uppercase tracking-[0.28em] text-[#2641FF]">
+        <p className="mt-[0.6em] text-[0.62em] font-semibold uppercase tracking-[0.28em] text-[#2641FF]">
           {open ? "New member" : m.role}
         </p>
+        <div className="mt-[1.2em] h-px w-[2.5em] bg-black/20" />
 
         {/* description */}
-        <div className="mt-[0.8em] min-h-0 flex-1">
+        <div className="mt-[1.2em] min-h-0 flex-1">
           {m.bio ? (
-            <p className="text-[0.7em] leading-[1.6] text-black/60">{m.bio}</p>
+            <p className="text-[0.74em] leading-[1.7] text-black/65">{m.bio}</p>
           ) : (
-            <div aria-label="Description coming soon" className="space-y-[0.55em] pt-[0.2em]">
+            <div aria-label="Description coming soon" className="space-y-[0.6em] pt-[0.2em]">
               <div className="h-[0.42em] w-full rounded-full bg-black/[0.07]" />
-              <div className="h-[0.42em] w-[92%] rounded-full bg-black/[0.07]" />
-              <div className="h-[0.42em] w-[70%] rounded-full bg-black/[0.07]" />
+              <div className="h-[0.42em] w-[94%] rounded-full bg-black/[0.07]" />
+              <div className="h-[0.42em] w-[88%] rounded-full bg-black/[0.07]" />
+              <div className="h-[0.42em] w-[60%] rounded-full bg-black/[0.07]" />
             </div>
           )}
+        </div>
+
+        {/* signature */}
+        <div className="mt-[1em]">
+          <div className="flex h-[3.2em] items-end overflow-hidden">
+            {open ? null : m.signature ? (
+              <img src={m.signature} alt={`${m.name}'s signature`} draggable={false} className="max-h-full max-w-[75%] object-contain" />
+            ) : (
+              <span
+                className="-mb-[0.15em] max-w-full whitespace-nowrap leading-none text-[#1a1f4d]"
+                style={{
+                  fontFamily: '"Mrs Saint Delafield", "Brush Script MT", cursive',
+                  fontSize: m.name.length > 14 ? "2.1em" : "2.4em",
+                }}
+              >
+                {m.name}
+              </span>
+            )}
+          </div>
+          <div className="mt-[0.3em] h-px w-[70%] bg-black/25" />
+          <p className="mt-[0.45em] text-[0.5em] font-medium uppercase tracking-[0.32em] text-black/40">Signature</p>
         </div>
       </div>
     </Paper>
@@ -164,8 +198,10 @@ function renderPage(p: Page, side: "left" | "right") {
       return <EndPage side={side} />;
     case "blank":
       return <Paper side={side} />;
-    case "member":
-      return <MemberPage m={p.m} i={p.i} side={side} />;
+    case "photo":
+      return <PhotoPage m={p.m} i={p.i} side={side} />;
+    case "info":
+      return <InfoPage m={p.m} i={p.i} side={side} />;
   }
 }
 
@@ -250,16 +286,18 @@ export function Team() {
     return () => window.removeEventListener("resize", fit);
   }, []);
 
+  // Each person gets a spread: photo on the left page, details on the right.
   // Desktop: a real two-page spread, so each leaf carries a page on both sides.
-  // Phone: one page at a time, each leaf has a member on the front and plain paper behind.
-  const inner: Page[] = team.map((m, i) => ({ kind: "member", m, i }));
+  // Phone: one page at a time (photo, then details), plain paper behind each.
+  const inner: Page[] = team.flatMap((m, i) => [
+    { kind: "photo", m, i } as Page,
+    { kind: "info", m, i } as Page,
+  ]);
   const leaves: [Page, Page][] = [];
   if (phone) {
     [{ kind: "cover" } as Page, ...inner, { kind: "end" } as Page].forEach((p) => leaves.push([p, { kind: "blank" }]));
   } else {
-    const pages: Page[] = [{ kind: "cover" }, ...inner];
-    if (inner.length % 2 === 1) pages.push({ kind: "end" });
-    pages.push({ kind: "back" });
+    const pages: Page[] = [{ kind: "cover" }, ...inner, { kind: "back" }];
     for (let i = 0; i < pages.length; i += 2) leaves.push([pages[i], pages[i + 1]]);
   }
   const L = leaves.length;
@@ -323,18 +361,11 @@ export function Team() {
   const shift = phone ? 0 : flipped === 0 ? -W / 2 : flipped === L ? W / 2 : 0;
 
   // Label under the book.
-  const memberPos = (p: Page) => (p.kind === "member" ? p.i + 1 : null);
+  const who = (p?: Page) => (p && (p.kind === "photo" || p.kind === "info") ? p.i : null);
   let label = "Cover";
   if (flipped > 0) {
-    if (phone) {
-      const p = leaves[flipped][0];
-      label = p.kind === "member" ? `${String(p.i + 1).padStart(2, "0")} / ${String(team.length).padStart(2, "0")}` : "The end";
-    } else if (flipped === L) {
-      label = "Back cover";
-    } else {
-      const nums = [memberPos(leaves[flipped - 1][1]), memberPos(leaves[flipped]?.[0])].filter(Boolean) as number[];
-      label = `${nums.map((n) => String(n).padStart(2, "0")).join("–")} / ${String(team.length).padStart(2, "0")}`;
-    }
+    const i = phone ? who(leaves[flipped][0]) : flipped === L ? null : who(leaves[flipped - 1][1]);
+    label = i !== null ? num(i) : phone ? "The end" : "Back cover";
   }
 
   return (
