@@ -6,15 +6,16 @@ import { services } from "@/data/services";
 import { VelocityMarquee } from "./VelocityMarquee";
 
 const base = import.meta.env.BASE_URL;
-const pf = (folder: string, file: string) => `${base}portfolio/${folder}/${file}`;
+
+const card = (n: string) => `${base}services/card-${n}.webp`;
 
 const IMAGES: Record<string, string> = {
-  "branding-design": pf("Branding + Presentation", "b13 copy.webp"),
-  "content-creation-animation": `${base}showcase/t01.webp`,
-  "social-media-management": pf("Creative Campaign + Social Media", "Lspace_Carousel01_062026_Slide1 copy.webp"),
-  "meta-ads": pf("Creative Campaign + Social Media", "Purplecurve_Static01_022026 copy.webp"),
-  "website-design-development": pf("E-Commerce Store + Website", "Lspace Website copy.webp"),
-  "technical-graphics-animation": `${base}showcase/t05.webp`,
+  "branding-design": card("01"),
+  "content-creation-animation": card("02"),
+  "social-media-management": card("03"),
+  "meta-ads": card("04"),
+  "website-design-development": card("05"),
+  "technical-graphics-animation": card("06"),
 };
 
 /**
