@@ -1,5 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
-import { Portfolio } from "@/components/sections/Portfolio";
+import { Showreel } from "@/components/sections/Showreel";
 import { Team } from "@/components/sections/Team";
 import { Socials } from "@/components/sections/Socials";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -22,7 +22,7 @@ export default function Home() {
       <WildServices />
       <Stats />
       <SelectedWork />
-      <Portfolio />
+      <Showreel />
       <Socials />
       <Team />
       <WildClientele />

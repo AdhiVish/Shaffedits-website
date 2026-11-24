@@ -199,7 +199,7 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
 /**
  * Selected projects, from a client's point of view: one screen, no scroll
  * journey. Real clients as tiles, each quietly cycling through the work we
- * made for them. The tiles are display only; the lime tile leads to the archive.
+ * made for them. The tiles are display only; the lime tile leads to the showreel.
  */
 export function SelectedWork() {
   const ref = useRef<HTMLElement>(null);
@@ -252,9 +252,9 @@ export function SelectedWork() {
           <Tile key={p.client} p={p} index={i} show={show} />
         ))}
 
-        {/* the rest of the work lives in the archive just below */}
+        {/* our videos live in the showreel just below */}
         <motion.a
-          href="#archive"
+          href="#videos"
           initial={{ clipPath: "inset(100% 0 0 0 round 24px)", y: 40 }}
           animate={show ? { clipPath: "inset(0% 0 0 0 round 24px)", y: 0 } : undefined}
           transition={{ duration: 1.1, delay: 0.15 + PROJECTS.length * 0.1, ease: EASE }}
@@ -264,7 +264,7 @@ export function SelectedWork() {
             Just a few of the <span className="italic font-light">40+ brands</span> we work with.
           </p>
           <span className="inline-flex shrink-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em]">
-            Full archive
+            Watch our reels
             <span className="grid size-9 place-items-center rounded-full bg-black text-[#2641FF] transition-transform duration-300 group-hover:translate-y-1">
               <ArrowDown className="size-4" />
             </span>
