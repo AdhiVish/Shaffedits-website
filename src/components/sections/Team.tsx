@@ -15,7 +15,7 @@ const team: Member[] = [
   },
   { name: "Juhainaah", role: "Content & Project Manager" },
   { name: "Adhi", role: "Web Developer" },
-  { name: "Rukshandha", role: "Video Editor" },
+  { name: "Rukshanda", role: "Video Editor" },
   { name: "", role: "" },
   { name: "", role: "" },
 ];
