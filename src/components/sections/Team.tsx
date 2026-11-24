@@ -1,215 +1,187 @@
-import {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  type CSSProperties,
-  type KeyboardEvent as ReactKeyboardEvent,
-} from "react";
-import { motion, type PanInfo } from "motion/react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { motion } from "motion/react";
+import { ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import logoWhite from "@/assets/logo-white.png";
 
-type Suit = "spades" | "hearts" | "clubs" | "diamonds";
-type Rank = "K" | "Q" | "J" | "A";
+type Member = { name: string; role: string; bio?: string; image?: string };
 
-// Each team member is dealt a face card: men get King, Jack or Ace, women get Queen.
-// Change `rank` and `suit` here to deal someone a different card.
-const team: {
-  name: string;
-  role: string;
-  bio: string;
-  rank: Rank;
-  suit: Suit;
-  image?: string;
-}[] = [
-  { name: "Mohammed Shafeeq", role: "Founder & Creative Director", rank: "K", suit: "spades", bio: "Leads the agency's creative vision, brand strategy, client relationships, and campaign direction while ensuring every project creates meaningful business impact." },
-  { name: "Ayesha Saiyed", role: "Content Writer", rank: "Q", suit: "hearts", bio: "Transforms ideas into compelling stories, campaigns, and copy that connect brands with their audience." },
-  { name: "Amal Kader", role: "Social Media Strategist", rank: "J", suit: "clubs", bio: "Develops strategic content plans and digital growth frameworks that strengthen brand presence across platforms." },
-  { name: "Zeena Qaida", role: "Graphic Designer", rank: "Q", suit: "diamonds", bio: "Creates thoughtful visual identities and creative assets that blend aesthetics with strategy." },
-  { name: "Mohammed", role: "Web Developer", rank: "A", suit: "spades", bio: "Builds fast, scalable, and user-focused websites designed for performance and long-term growth." },
-  { name: "Sufyaan", role: "Web Developer", rank: "K", suit: "diamonds", bio: "Builds modern, responsive, and high-performance digital experiences, turning creative concepts into seamless websites that are both visually engaging and technically robust." },
-  { name: "Rukshanda", role: "Video Editor", rank: "Q", suit: "clubs", bio: "Shapes engaging visual stories through editing, pacing, motion, and cinematic storytelling." },
+// The team, in book order. Leave `name` empty for a spot that is still to be filled.
+// Add `image` (a path under public/) once a photo arrives, and `bio` for the description.
+const team: Member[] = [
+  {
+    name: "Mohammed Shafeeq",
+    role: "Founder & Creative Director",
+    bio: "Leads the agency's creative vision, brand strategy, client relationships, and campaign direction while ensuring every project creates meaningful business impact.",
+  },
+  { name: "Juhainaah", role: "Content & Project Manager" },
+  { name: "Adhi", role: "Web Developer" },
+  { name: "Rukshandha", role: "Video Editor" },
+  { name: "", role: "" },
+  { name: "", role: "" },
 ];
 
-const RANK_NAME: Record<Rank, string> = { K: "King", Q: "Queen", J: "Jack", A: "Ace" };
-const SUIT_NAME: Record<Suit, string> = {
-  spades: "Spades",
-  hearts: "Hearts",
-  clubs: "Clubs",
-  diamonds: "Diamonds",
-};
-// Black suits take the brand lime, red suits a warm coral — both read on a dark card.
-const SUIT_COLOR: Record<Suit, string> = {
-  spades: "#2641FF",
-  clubs: "#2641FF",
-  hearts: "#FF5468",
-  diamonds: "#FF5468",
-};
+type Page =
+  | { kind: "cover" }
+  | { kind: "back" }
+  | { kind: "blank" }
+  | { kind: "end" }
+  | { kind: "member"; m: Member; i: number };
 
-const PIP_PATH: Record<Suit, string> = {
-  hearts:
-    "M50 90 C20 63 5 46 5 30 C5 16 16 7 29 7 C38 7 46 12 50 20 C54 12 62 7 71 7 C84 7 95 16 95 30 C95 46 80 63 50 90 Z",
-  diamonds: "M50 3 L89 50 L50 97 L11 50 Z",
-  spades:
-    "M50 5 C50 5 8 38 8 60 C8 74 20 83 33 83 C40 83 46 80 48 75 C47 85 43 92 35 96 L65 96 C57 92 53 85 52 75 C54 80 60 83 67 83 C80 83 92 74 92 60 C92 38 50 5 50 5 Z",
-  clubs: "M42 58 L58 58 L64 96 L36 96 Z",
-};
+const FLIP_S = 0.9;
+const EASE = [0.45, 0, 0.2, 1] as const;
+const RATIO = 1.38; // page height / width
 
-function Pip({ suit, className, color }: { suit: Suit; className?: string; color?: string }) {
+/* ------------------------------------------------------------------ */
+/* Pages                                                               */
+/* ------------------------------------------------------------------ */
+
+function CoverPage() {
   return (
-    <svg viewBox="0 0 100 100" aria-hidden className={className} fill={color ?? SUIT_COLOR[suit]}>
-      <path d={PIP_PATH[suit]} />
-      {suit === "clubs" && (
-        <>
-          <circle cx="50" cy="27" r="21" />
-          <circle cx="27" cy="60" r="21" />
-          <circle cx="73" cy="60" r="21" />
-        </>
-      )}
-    </svg>
-  );
-}
+    <div className="absolute inset-0 overflow-hidden rounded-r-[0.9em] rounded-l-[0.25em] bg-[#0b0b0b] text-white">
+      {/* spine */}
+      <div className="chrome-bg absolute inset-y-0 left-0 w-[0.9em]" />
+      <div className="absolute inset-y-0 left-[0.9em] w-[0.5em] bg-gradient-to-r from-black/70 to-transparent" />
+      {/* soft light + embossed frame */}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_70%_15%,rgba(255,255,255,0.08),transparent_60%)]" />
+      <div className="absolute inset-y-[1.3em] left-[2.2em] right-[1.3em] rounded-[0.5em] border border-white/[0.12]" />
 
-/** Small crest above the monogram: crown for K, tiara for Q, plume for J. */
-function Crest({ rank, color }: { rank: Rank; color: string }) {
-  if (rank === "J") {
-    return (
-      <svg viewBox="0 0 100 100" aria-hidden className="h-[1.75em] w-[1.75em]" fill="none" stroke={color} strokeWidth="5" strokeLinecap="round">
-        <path d="M50 6 C82 30 80 70 50 94 C20 70 18 30 50 6 Z" />
-        <path d="M50 18 L50 88" />
-        <path d="M50 40 L68 30 M50 56 L70 46 M50 40 L32 30 M50 56 L30 46" />
-      </svg>
-    );
-  }
-  if (rank === "Q") {
-    return (
-      <svg viewBox="0 0 100 100" aria-hidden className="h-[1.75em] w-[1.75em]" fill={color}>
-        <path d="M10 78 L16 36 L34 56 L50 24 L66 56 L84 36 L90 78 Z" />
-        <circle cx="16" cy="30" r="6" />
-        <circle cx="50" cy="16" r="7" />
-        <circle cx="84" cy="30" r="6" />
-        <rect x="10" y="82" width="80" height="8" rx="3" />
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 100 100" aria-hidden className="h-[1.75em] w-[1.75em]" fill={color}>
-      <path d="M8 80 L8 32 L30 54 L50 20 L70 54 L92 32 L92 80 Z" />
-      <rect x="8" y="84" width="84" height="9" rx="3" />
-      <rect x="46" y="4" width="8" height="18" rx="2" />
-      <rect x="40" y="9" width="20" height="7" rx="2" />
-    </svg>
-  );
-}
-
-function initials(name: string) {
-  return name.split(" ").map((n) => n[0]).slice(0, 2).join("");
-}
-
-function Corner({ rank, suit, flip }: { rank: Rank; suit: Suit; flip?: boolean }) {
-  const color = SUIT_COLOR[suit];
-  return (
-    <div
-      className={`absolute flex flex-col items-center leading-none ${
-        flip ? "bottom-[0.75em] right-[0.75em] rotate-180" : "left-[0.75em] top-[0.75em]"
-      }`}
-      style={{ color }}
-    >
-      <span className="font-display text-[1.7em] font-black">{rank}</span>
-      <Pip suit={suit} className="mt-[0.25em] h-[1.25em] w-[1.25em]" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pl-[0.9em]">
+        <img src={logoWhite} alt="Shaffedits" draggable={false} className="w-[62%] select-none object-contain" />
+        <p className="mt-[1.6em] text-[0.62em] font-medium uppercase tracking-[0.45em] text-white/55">Meet the team</p>
+      </div>
+      <p className="absolute bottom-[2.4em] right-[2.4em] inline-flex items-center gap-[0.5em] text-[0.6em] font-medium uppercase tracking-[0.3em] text-white/45">
+        Open <ArrowRight className="h-[1.2em] w-[1.2em]" />
+      </p>
     </div>
   );
 }
 
-/** The front of one playing card, dark with a thin lit border. */
-function CardFace({ member }: { member: (typeof team)[number] }) {
-  const color = SUIT_COLOR[member.suit];
-  const mono = initials(member.name);
-  const isAce = member.rank === "A";
-
-  const half = (
-    <div className="flex flex-col items-center justify-center gap-[0.5em]">
-      <Crest rank={member.rank} color={color} />
-      <span
-        className="font-display text-[3.6em] font-black leading-none tracking-tight"
-        style={{ color, textShadow: `0 0 28px ${color}55` }}
-      >
-        {mono}
-      </span>
-    </div>
-  );
-
+function BackCover() {
   return (
-    <div
-      className="absolute inset-0 overflow-hidden rounded-[1.1em]"
-      style={{
-        background: "linear-gradient(150deg, #1a1a1a 0%, #0a0a0a 55%, #050505 100%)",
-        border: `1px solid ${color}66`,
-        boxShadow: `0 30px 70px -20px rgba(0,0,0,0.9), 0 0 60px -10px ${color}33`,
-      }}
-    >
-      <Corner rank={member.rank} suit={member.suit} />
-      <Corner rank={member.rank} suit={member.suit} flip />
-
-      {/* inner frame */}
-      <div
-        className="absolute inset-x-[15%] inset-y-[8%] rounded-lg"
-        style={{ border: `1px solid ${color}40`, background: `linear-gradient(160deg, ${color}0d, transparent 60%)` }}
-      >
-        {isAce ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Pip suit={member.suit} className="h-[78%] w-[78%] opacity-95" />
-            <span className="absolute font-display text-[3.4em] font-black text-black/85">{mono}</span>
-          </div>
-        ) : (
-          <>
-            <div className="absolute inset-x-0 top-0 flex h-1/2 items-center justify-center">{half}</div>
-            <div className="absolute inset-x-0 bottom-0 flex h-1/2 rotate-180 items-center justify-center">{half}</div>
-            <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2" style={{ background: `${color}55` }} />
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0a0a0a] p-[0.4em]">
-              <Pip suit={member.suit} className="h-5 w-5" />
-            </div>
-          </>
-        )}
+    <div className="absolute inset-0 overflow-hidden rounded-l-[0.9em] rounded-r-[0.25em] bg-[#0b0b0b]">
+      <div className="chrome-bg absolute inset-y-0 right-0 w-[0.9em]" />
+      <div className="absolute inset-y-[1.3em] left-[1.3em] right-[2.2em] rounded-[0.5em] border border-white/[0.12]" />
+      <div className="absolute inset-0 flex items-center justify-center pr-[0.9em]">
+        <img src={logoWhite} alt="" draggable={false} className="w-[34%] select-none object-contain opacity-40" />
       </div>
     </div>
   );
 }
 
-/** The back of every card: dark lattice with the Shaffedits logo. */
-function CardBack({ style }: { style?: CSSProperties }) {
+/** Paper with a soft shadow toward the spine. */
+function Paper({ side, children }: { side: "left" | "right"; children?: ReactNode }) {
   return (
     <div
-      className="absolute inset-0 overflow-hidden rounded-[1.1em]"
-      style={{
-        background:
-          "repeating-linear-gradient(45deg, rgba(38,65,255,0.16) 0 1px, transparent 1px 11px), repeating-linear-gradient(-45deg, rgba(38,65,255,0.16) 0 1px, transparent 1px 11px), #080808",
-        border: "1px solid rgba(38,65,255,0.45)",
-        boxShadow: "0 30px 70px -20px rgba(0,0,0,0.9)",
-        ...style,
-      }}
+      className={`absolute inset-0 overflow-hidden bg-[#f4f2ee] text-black ${
+        side === "right" ? "rounded-r-[0.9em]" : "rounded-l-[0.9em]"
+      }`}
     >
-      <div className="absolute inset-[0.75em] rounded-xl border border-[#2641FF]/40" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="rounded-xl bg-[#080808] px-[1.25em] py-[1em] ring-1 ring-[#2641FF]/40">
-          <img src={logoWhite} alt="" draggable={false} className="w-[6em] object-contain" />
+      {children}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-y-0 w-[2.2em] ${
+          side === "right" ? "left-0 bg-gradient-to-r" : "right-0 bg-gradient-to-l"
+        } from-black/15 to-transparent`}
+      />
+    </div>
+  );
+}
+
+function MemberPage({ m, i, side }: { m: Member; i: number; side: "left" | "right" }) {
+  const open = !m.name;
+  return (
+    <Paper side={side}>
+      <div className="absolute inset-0 flex flex-col p-[1.5em]">
+        <div className="flex items-center justify-between text-[0.56em] font-medium uppercase tracking-[0.32em] text-black/40">
+          <span>Shaffedits · Team</span>
+          <span>
+            {String(i + 1).padStart(2, "0")} / {String(team.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* photo */}
+        <div className="relative mt-[0.9em] grid aspect-[4/3.3] place-items-center overflow-hidden rounded-[0.6em] bg-black/[0.05] ring-1 ring-black/10">
+          {m.image ? (
+            <img src={m.image} alt={m.name} draggable={false} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex flex-col items-center gap-[0.6em] text-black/30">
+              <Camera className="h-[1.8em] w-[1.8em]" strokeWidth={1.4} />
+              <span className="text-[0.55em] font-medium uppercase tracking-[0.3em]">Photo coming soon</span>
+            </div>
+          )}
+        </div>
+
+        <h3
+          className={`mt-[0.85em] font-display text-[1.65em] font-black leading-[0.95] tracking-tight ${
+            open ? "text-black/25" : ""
+          }`}
+        >
+          {open ? "Coming soon" : m.name}
+        </h3>
+        <p className="mt-[0.5em] text-[0.6em] font-semibold uppercase tracking-[0.28em] text-[#2641FF]">
+          {open ? "New member" : m.role}
+        </p>
+
+        {/* description */}
+        <div className="mt-[0.8em] min-h-0 flex-1">
+          {m.bio ? (
+            <p className="text-[0.7em] leading-[1.6] text-black/60">{m.bio}</p>
+          ) : (
+            <div aria-label="Description coming soon" className="space-y-[0.55em] pt-[0.2em]">
+              <div className="h-[0.42em] w-full rounded-full bg-black/[0.07]" />
+              <div className="h-[0.42em] w-[92%] rounded-full bg-black/[0.07]" />
+              <div className="h-[0.42em] w-[70%] rounded-full bg-black/[0.07]" />
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </Paper>
   );
 }
+
+function EndPage({ side }: { side: "left" | "right" }) {
+  return (
+    <Paper side={side}>
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-[2em] text-center">
+        <p className="text-[0.56em] font-medium uppercase tracking-[0.32em] text-black/40">That's the crew</p>
+        <p className="mt-[0.6em] font-display text-[1.6em] font-black leading-[0.95] tracking-tight">
+          Your project,
+          <br />
+          <span className="font-light italic text-[#2641FF]">our people.</span>
+        </p>
+      </div>
+    </Paper>
+  );
+}
+
+function renderPage(p: Page, side: "left" | "right") {
+  switch (p.kind) {
+    case "cover":
+      return <CoverPage />;
+    case "back":
+      return <BackCover />;
+    case "end":
+      return <EndPage side={side} />;
+    case "blank":
+      return <Paper side={side} />;
+    case "member":
+      return <MemberPage m={p.m} i={p.i} side={side} />;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Background strips of real work (kept from the old section)          */
+/* ------------------------------------------------------------------ */
 
 const TOP_ROW = ["t01", "t04", "t02", "t07", "t10", "t03", "t05", "t11"];
 const BOTTOM_ROW = ["t06", "t12", "t08", "t09", "t03", "t01", "t05", "t02"];
 
-/** A slow, dimmed strip of the agency's real work that sits behind the deck. */
 function WorkRow({ ids, reverse, className }: { ids: string[]; reverse?: boolean; className: string }) {
   const base = import.meta.env.BASE_URL;
   return (
     <div
       aria-hidden
-      className={`pointer-events-none absolute inset-x-0 z-0 h-28 overflow-hidden opacity-[0.22] md:h-36 ${className}`}
+      className={`pointer-events-none absolute inset-x-0 z-0 h-28 overflow-hidden opacity-[0.18] md:h-36 ${className}`}
       style={{
         WebkitMaskImage: "linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent)",
         maskImage: "linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent)",
@@ -242,144 +214,140 @@ function WorkRow({ ids, reverse, className }: { ids: string[]; reverse?: boolean
   );
 }
 
-// ---- Coverflow + flip tuning ----
-const BASE_W = 300; // card width at full size (px); height follows the 5:7 playing-card ratio
-const FLIP_S = 0.85; // seconds for the card that lands in the middle to turn over
-const SLIDE_S = 0.5;
-const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
-const DRAG_THRESHOLD = 90;
-const TILT = 24;
-const SCALE_STEP = 0.1;
+/* ------------------------------------------------------------------ */
+/* The flipbook                                                        */
+/* ------------------------------------------------------------------ */
 
 export function Team() {
-  const n = team.length;
-  const [active, setActive] = useState(0);
-  // Rotation (deg) of every card around its vertical axis: multiples of 360 show
-  // the face, odd multiples of 180 show the back. Only the active card is face up.
-  const [angles, setAngles] = useState<number[]>(() => team.map((_, i) => (i === 0 ? 0 : 180)));
-  const [W, setW] = useState(BASE_W);
+  const [W, setW] = useState(360);
   const [phone, setPhone] = useState(false);
+  const [still, setStill] = useState(false);
+  const [flipped, setFlipped] = useState(0); // how many leaves have been turned
+  const [moving, setMoving] = useState<number | null>(null); // leaf turning forward, kept on top
+  const [peek, setPeek] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const lockRef = useRef(false);
-  const prevRel = useRef<Record<number, number>>({});
+  const touchX = useRef<number | null>(null);
 
-  // Card size follows the screen so the row always fits.
   useEffect(() => {
     const fit = () => {
       const iw = window.innerWidth;
-      const small = iw < 640;
+      const ih = window.innerHeight;
+      const small = iw < 768;
       setPhone(small);
-      // desktop: size so all seven cards fit across the screen; phone: centre card + neighbours
-      setW(Math.round(small ? iw * 0.5 : Math.min(BASE_W, Math.max(150, iw / 4.9))));
+      setW(
+        Math.round(
+          small
+            ? Math.min(iw - 56, 360, (ih * 0.6) / RATIO)
+            : Math.min(400, (iw - 160) / 2, (ih * 0.56) / RATIO),
+        ),
+      );
     };
     fit();
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setStill(mq.matches);
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
   }, []);
 
-  const H = Math.round((W * 7) / 5);
-  const SPREAD = Math.round(W * (phone ? 0.56 : 0.68));
+  // Desktop: a real two-page spread, so each leaf carries a page on both sides.
+  // Phone: one page at a time, each leaf has a member on the front and plain paper behind.
+  const inner: Page[] = team.map((m, i) => ({ kind: "member", m, i }));
+  const leaves: [Page, Page][] = [];
+  if (phone) {
+    [{ kind: "cover" } as Page, ...inner, { kind: "end" } as Page].forEach((p) => leaves.push([p, { kind: "blank" }]));
+  } else {
+    const pages: Page[] = [{ kind: "cover" }, ...inner];
+    if (inner.length % 2 === 1) pages.push({ kind: "end" });
+    pages.push({ kind: "back" });
+    for (let i = 0; i < pages.length; i += 2) leaves.push([pages[i], pages[i + 1]]);
+  }
+  const L = leaves.length;
+  const maxFlip = phone ? L - 1 : L;
 
-  const lock = useCallback(() => {
-    lockRef.current = true;
-    window.setTimeout(() => {
-      lockRef.current = false;
-    }, FLIP_S * 1000 * 0.9);
-  }, []);
-
-  const goTo = useCallback(
-    (i: number, dir: number) => {
-      if (lockRef.current || i === active) return;
-      lock();
-      // Like turning a page: going forward flips right-to-left, going back left-to-right.
-      // The card leaving the middle turns face down, the arriving one turns face up.
-      const turn = dir > 0 ? -180 : 180;
-      setAngles((a) => a.map((v, k) => (k === i || k === active ? v + turn : v)));
-      setActive(i);
-    },
-    [lock, active],
-  );
-  const step = useCallback(
-    (dir: number) => goTo((((active + dir) % n) + n) % n, dir),
-    [goTo, active, n],
-  );
-
-  const onKeyDown = useCallback(
-    (e: ReactKeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === " " || e.key === "Enter") {
-        e.preventDefault();
-        step(1);
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        step(-1);
-      } else if (e.key === "Home") {
-        e.preventDefault();
-        goTo(0, -1);
-      } else if (e.key === "End") {
-        e.preventDefault();
-        goTo(n - 1, 1);
-      }
-    },
-    [step, goTo, n],
-  );
-
-  const onDragEnd = useCallback(
-    (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (info.offset.x <= -DRAG_THRESHOLD) step(1);
-      else if (info.offset.x >= DRAG_THRESHOLD) step(-1);
-    },
-    [step],
-  );
-
-  // Show the whole hand (up to 3 either side); on narrow screens 2 either side.
-  const reach = Math.min(Math.floor(n / 2), phone ? 2 : 3);
-  const visible: { rel: number; index: number }[] = [];
-  for (let rel = -reach; rel <= reach; rel++) visible.push({ rel, index: (((active + rel) % n) + n) % n });
-
+  // Keep the position valid when switching between phone and desktop layouts.
   useEffect(() => {
-    const next: Record<number, number> = {};
-    visible.forEach((v) => (next[v.index] = v.rel));
-    prevRel.current = next;
-  });
+    setFlipped((f) => Math.min(f, maxFlip));
+  }, [maxFlip]);
 
-  const member = team[active];
-  const color = SUIT_COLOR[member.suit];
-  const slideCss = `transform ${SLIDE_S}s ${EASE}, opacity ${SLIDE_S}s ${EASE}`;
+  const dur = still ? 0 : FLIP_S;
+
+  const lock = (ms: number) => {
+    lockRef.current = true;
+    window.setTimeout(() => (lockRef.current = false), ms);
+  };
+
+  const next = useCallback(() => {
+    if (lockRef.current) return;
+    setPeek(false);
+    if (flipped >= maxFlip) {
+      // Back at the end: close the book again, last leaf first.
+      setResetting(true);
+      setFlipped(0);
+      const total = (dur + 0.12 * (L - 1)) * 1000;
+      lock(total);
+      window.setTimeout(() => setResetting(false), total);
+      return;
+    }
+    lock(dur * 650);
+    setMoving(flipped);
+    window.setTimeout(() => setMoving((m) => (m === flipped ? null : m)), dur * 1000);
+    setFlipped(flipped + 1);
+  }, [flipped, maxFlip, dur, L]);
+
+  const prev = useCallback(() => {
+    if (lockRef.current || flipped === 0) return;
+    lock(dur * 650);
+    setFlipped(flipped - 1);
+  }, [flipped, dur]);
+
+  const onKey = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      next();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prev();
+    }
+  };
+
+  const onBookClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (phone) return next();
+    const b = e.currentTarget.getBoundingClientRect();
+    if (e.clientX - b.left < b.width / 2) prev();
+    else next();
+  };
+
+  const H = Math.round(W * RATIO);
+  // Closed books sit in the middle: the cover on its own, or the back cover on its own.
+  const shift = phone ? 0 : flipped === 0 ? -W / 2 : flipped === L ? W / 2 : 0;
+
+  // Label under the book.
+  const memberPos = (p: Page) => (p.kind === "member" ? p.i + 1 : null);
+  let label = "Cover";
+  if (flipped > 0) {
+    if (phone) {
+      const p = leaves[flipped][0];
+      label = p.kind === "member" ? `${String(p.i + 1).padStart(2, "0")} / ${String(team.length).padStart(2, "0")}` : "The end";
+    } else if (flipped === L) {
+      label = "Back cover";
+    } else {
+      const nums = [memberPos(leaves[flipped - 1][1]), memberPos(leaves[flipped]?.[0])].filter(Boolean) as number[];
+      label = `${nums.map((n) => String(n).padStart(2, "0")).join("–")} / ${String(team.length).padStart(2, "0")}`;
+    }
+  }
 
   return (
     <section
       id="team"
-      className="relative overflow-hidden px-6 pt-44 pb-28 text-white md:pt-56 md:pb-40"
+      className="relative overflow-hidden px-6 pt-44 pb-44 text-white md:pt-56 md:pb-52"
       style={{ background: "radial-gradient(circle at top, #232323 0%, #050505 62%)" }}
     >
-      {/* Giant outlined first name that swaps as you move through the team */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-[44%] z-0 flex -translate-y-1/2 justify-center overflow-hidden"
-      >
-        <motion.span
-          key={active}
-          initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="select-none whitespace-nowrap font-display font-black leading-none tracking-tighter"
-          style={{
-            fontSize: "clamp(6rem, 22vw, 20rem)",
-            color: "transparent",
-            WebkitTextStroke: `1px ${color}47`,
-          }}
-        >
-          {member.name.split(" ")[0]}
-        </motion.span>
-      </div>
-
-      {/* Light behind the hand, tinted to the suit on the table */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[46%] h-[54rem] w-[54rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        animate={{ backgroundImage: `radial-gradient(closest-side, ${color}20, ${color}0c 55%, ${color}00)` }}
-        transition={{ duration: 0.8 }}
+        className="pointer-events-none absolute left-1/2 top-[55%] h-[50rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "radial-gradient(closest-side, rgba(38,65,255,0.14), rgba(38,65,255,0.05) 55%, transparent)" }}
       />
-
       <WorkRow ids={TOP_ROW} className="top-6" />
       <WorkRow ids={BOTTOM_ROW} reverse className="bottom-4" />
 
@@ -389,162 +357,117 @@ export function Team() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
-          className="mb-8 flex items-end justify-between gap-6"
+          className="mb-12 md:mb-16"
         >
-          <div>
-            <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
-              Our Team / 03
-            </p>
-            <h2 className="max-w-3xl font-display text-[clamp(2rem,5vw,4rem)] font-black leading-none tracking-tight">
-              The people behind the <span className="italic font-light text-white/60">work</span>
-            </h2>
-          </div>
-          <div className="hidden shrink-0 items-baseline gap-1 font-display text-white/40 sm:flex">
-            <motion.span
-              key={active}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="chrome-text text-2xl font-bold"
-            >
-              {String(active + 1).padStart(2, "0")}
-            </motion.span>
-            <span className="text-sm"> / {String(n).padStart(2, "0")}</span>
-          </div>
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/50">Our Team / 03</p>
+          <h2 className="max-w-3xl font-display text-[clamp(2rem,5vw,4rem)] font-black leading-none tracking-tight">
+            The people behind the <span className="font-light italic text-white/60">work</span>
+          </h2>
         </motion.div>
 
-        {/* ---- The hand: every card in one horizontal row ---- */}
-        <div
-          className="relative mx-auto flex items-center justify-center outline-none"
-          style={{ perspective: 1300, minHeight: H + 90 }}
-          tabIndex={0}
-          role="group"
-          aria-roledescription="carousel"
-          aria-label="Team members"
-          onKeyDown={onKeyDown}
-        >
+        {/* ---- the book ---- */}
+        <div className={phone ? "mx-auto overflow-hidden" : "mx-auto"} style={{ width: phone ? W : 2 * W, height: H + 40, paddingTop: 20 }}>
           <motion.div
-            className="relative"
-            style={{ width: W, height: H }}
-            drag="x"
-            dragElastic={0.12}
-            dragMomentum={false}
-            dragSnapToOrigin
-            onDragEnd={onDragEnd}
+            role="group"
+            aria-roledescription="flipbook"
+            aria-label="Team members"
+            tabIndex={0}
+            onKeyDown={onKey}
+            onClick={onBookClick}
+            onMouseEnter={() => !phone && flipped === 0 && !still && setPeek(true)}
+            onMouseLeave={() => setPeek(false)}
+            onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+            onTouchEnd={(e) => {
+              if (touchX.current === null) return;
+              const dx = e.changedTouches[0].clientX - touchX.current;
+              touchX.current = null;
+              if (dx < -40) next();
+              else if (dx > 40) prev();
+            }}
+            className="relative cursor-pointer select-none outline-none"
+            style={{ width: phone ? W : 2 * W, height: H, perspective: 2200, fontSize: (W / 360) * 16 }}
+            animate={{ x: shift }}
+            transition={{ duration: dur * 0.8, ease: EASE }}
           >
-            {visible.map(({ rel, index }) => {
-              const m = team[index];
-              const isActive = rel === 0;
-              const dist = Math.abs(rel);
-              const sc = 1 - dist * SCALE_STEP;
-              const prev = prevRel.current[index];
-              // a card wrapping from one end of the row to the other just reappears
-              const jumped = prev !== undefined && Math.abs(rel - prev) > 1;
+            {/* soft shadow under whatever is lying open */}
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-6 h-10 rounded-[50%] bg-black/70 blur-xl"
+              animate={{
+                left: phone ? "6%" : flipped === 0 ? "53%" : flipped === L ? "3%" : "3%",
+                right: phone ? "6%" : flipped === 0 ? "3%" : flipped === L ? "53%" : "3%",
+              }}
+              transition={{ duration: dur * 0.8, ease: EASE }}
+            />
 
+            {leaves.map(([front, back], i) => {
+              const isFlipped = i < flipped;
+              const z = moving === i ? 3 * L : isFlipped ? i + 1 : 2 * L - i;
+              const delay = resetting ? 0.12 * (L - 1 - i) : 0;
               return (
-                <div
-                  key={m.name}
-                  onClick={() => (isActive ? step(1) : goTo(index, rel))}
-                  aria-current={isActive ? "true" : undefined}
-                  aria-label={isActive ? `${m.name}, ${RANK_NAME[m.rank]} of ${SUIT_NAME[m.suit]}` : `Show ${m.name}`}
-                  className="absolute"
+                <motion.div
+                  key={(phone ? "p" : "d") + i}
+                  className="absolute top-0"
                   style={{
-                    left: "50%",
-                    top: "50%",
+                    left: phone ? 0 : W,
                     width: W,
                     height: H,
-                    zIndex: 10 - dist,
-                    cursor: isActive ? "pointer" : "pointer",
-                    opacity: dist === 0 ? 1 : dist === 1 ? 0.8 : dist === 2 ? 0.55 : 0.38,
-                    transform: `translate(-50%, -50%) translateX(${rel * SPREAD}px) rotateY(${-rel * TILT}deg) scale(${sc})`,
-                    transition: jumped ? "none" : slideCss,
-                    fontSize: `${(W / BASE_W) * 16}px`,
+                    zIndex: z,
+                    transformOrigin: "left center",
+                    transformStyle: "preserve-3d",
                   }}
+                  initial={false}
+                  animate={{ rotateY: isFlipped ? -180 : peek && i === 0 ? -16 : 0 }}
+                  transition={{ duration: peek ? dur * 0.5 : dur, delay, ease: EASE }}
                 >
-                  {/* cards turn over sideways, like a page in a book */}
-                  <motion.div
-                    className="absolute inset-0"
-                    style={{ transformStyle: "preserve-3d" }}
-                    initial={false}
-                    animate={{ rotateY: angles[index] }}
-                    transition={{ duration: FLIP_S, ease: [0.45, 0, 0.2, 1] }}
+                  <div
+                    className="absolute inset-0 shadow-[0_30px_60px_-28px_rgba(0,0,0,0.85)]"
+                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                   >
-                    <div
-                      className="absolute inset-0"
-                      style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-                    >
-                      <CardFace member={m} />
-                    </div>
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                        transform: "rotateY(180deg)",
-                      }}
-                    >
-                      <CardBack />
-                    </div>
-                  </motion.div>
-                </div>
+                    {renderPage(front, "right")}
+                  </div>
+                  <div
+                    className="absolute inset-0 shadow-[0_30px_60px_-28px_rgba(0,0,0,0.85)]"
+                    style={{
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      transform: "rotateY(180deg)",
+                    }}
+                  >
+                    {renderPage(back, "left")}
+                  </div>
+                </motion.div>
               );
             })}
           </motion.div>
         </div>
 
-        {/* ---- Who's on the card ---- */}
-        <motion.div
-          key={active}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: FLIP_S * 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-6 max-w-2xl text-center"
-        >
-          <p
-            className="mb-4 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.35em]"
-            style={{ color }}
-          >
-            <Pip suit={member.suit} className="h-4 w-4" />
-            {RANK_NAME[member.rank]} of {SUIT_NAME[member.suit]}
-          </p>
-          <h3 className="font-display text-[clamp(2rem,4.5vw,3.5rem)] font-black leading-none tracking-tight">
-            {member.name}
-          </h3>
-          <p className="mt-3 text-xs uppercase tracking-[0.35em] text-white/50">{member.role}</p>
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-8 text-white/60">{member.bio}</p>
-        </motion.div>
-
-        <div className="mt-10 flex flex-col items-center gap-5">
+        {/* ---- controls ---- */}
+        <div className="mt-10 flex flex-col items-center gap-4">
           <div className="flex items-center gap-6">
             <button
               type="button"
-              onClick={() => step(-1)}
-              aria-label="Previous team member"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-black"
+              onClick={prev}
+              disabled={flipped === 0}
+              aria-label="Previous page"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-black disabled:pointer-events-none disabled:opacity-30"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
-
-            <div className="h-1 w-40 overflow-hidden rounded-full bg-white/10 sm:w-56">
-              <motion.div
-                className="neon-line h-full rounded-full"
-                animate={{ width: `${((active + 1) / n) * 100}%` }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </div>
-
+            <span className="min-w-[7rem] text-center font-display text-sm font-bold uppercase tracking-[0.25em] text-white/60">
+              {label}
+            </span>
             <button
               type="button"
-              onClick={() => step(1)}
-              aria-label="Next team member"
+              onClick={next}
+              aria-label={flipped >= maxFlip ? "Close the book" : "Next page"}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-black"
             >
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
-
           <p className="text-xs uppercase tracking-widest text-white/40">
-            Use the arrows, swipe, or click a card.
+            {phone ? "Tap or swipe to turn the page" : "Click the book or use the arrows to turn the page"}
           </p>
         </div>
       </div>

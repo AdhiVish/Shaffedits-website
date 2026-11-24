@@ -13,8 +13,8 @@ const IMAGES: Record<string, string> = {
   "branding-design": card("01"),
   "content-creation-animation": card("02"),
   "social-media-management": card("03"),
-  "meta-ads": card("04"),
-  "website-design-development": card("05"),
+  "meta-ads": card("05"),
+  "website-design-development": card("04"),
   "technical-graphics-animation": card("06"),
 };
 
