@@ -12,9 +12,9 @@ const IMAGES: Record<string, string> = {
   "branding-design": pf("Branding + Presentation", "b13 copy.webp"),
   "content-creation-animation": `${base}showcase/t01.webp`,
   "social-media-management": pf("Creative Campaign + Social Media", "Lspace_Carousel01_062026_Slide1 copy.webp"),
-  "videography-photography": `${base}showcase/t05.webp`,
   "meta-ads": pf("Creative Campaign + Social Media", "Purplecurve_Static01_022026 copy.webp"),
   "website-design-development": pf("E-Commerce Store + Website", "Lspace Website copy.webp"),
+  "technical-graphics-animation": `${base}showcase/t05.webp`,
 };
 
 /**
@@ -229,7 +229,7 @@ export function WildServices() {
 
 /** Two big crossing bands of services that react to scroll speed. */
 export function ServiceBands() {
-  const words = ["Branding", "Content", "Social", "Film", "Photo", "Meta Ads", "Websites", "Strategy"];
+  const words = ["Branding", "Content", "Social", "Meta Ads", "Websites", "Technical", "Animation", "Strategy"];
   return (
     <section aria-hidden className="relative overflow-hidden bg-black py-20 md:py-28">
       <div className="-rotate-[4deg] scale-110 chrome-bg py-3 text-black">

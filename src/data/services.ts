@@ -2,7 +2,7 @@ import {
   Palette,
   PenLine,
   Share2,
-  Clapperboard,
+  DraftingCompass,
   MonitorSmartphone,
   Target,
   type LucideIcon,
@@ -55,14 +55,6 @@ export const services: ServiceMeta[] = [
     cta: "Watch Projects",
   },
   {
-    slug: "videography-photography",
-    path: "/services/videography-photography",
-    icon: Clapperboard,
-    title: "Videography & Photography",
-    desc: "Cinematic capture and edits with commercial polish.",
-    cta: "View Websites",
-  },
-  {
     slug: "meta-ads",
     path: "/services/meta-ads",
     icon: Target,
@@ -77,5 +69,13 @@ export const services: ServiceMeta[] = [
     title: "Website Design & Development",
     desc: "Modern websites built for performance, user experience, and conversions.",
     cta: "View Websites",
+  },
+  {
+    slug: "technical-graphics-animation",
+    path: "/services/technical-graphics-animation",
+    icon: DraftingCompass,
+    title: "Technical Graphics & Animation",
+    desc: "Precise technical visuals and animations that make complex products easy to understand.",
+    cta: "Explore Work",
   },
 ];

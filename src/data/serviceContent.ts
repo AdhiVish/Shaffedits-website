@@ -25,6 +25,8 @@ import {
   Code2,
   Rocket,
   TrendingUp,
+  Box,
+  Rotate3d,
   type LucideIcon,
 } from "lucide-react";
 
@@ -197,60 +199,18 @@ export const serviceContent: Record<string, ServiceContent> = {
       { icon: Package, value: "1500+", label: "Projects Delivered" },
     ],
     formula: {
-      inputs: [{ label: "Brand" }, { label: "Content" }, { label: "Photography" }, { label: "Social" }],
+      inputs: [{ label: "Brand" }, { label: "Content" }, { label: "Ads" }, { label: "Social" }],
       output: { label: "Consistent presence" },
     },
     closingKicker: "Ready to grow your presence?",
     closingPlain: "Let's keep your brand",
     closingAccent: "moving",
-    nextSlug: "videography-photography",
-  },
-
-  "videography-photography": {
-    slug: "videography-photography",
-    order: 4,
-    accent: "#2641FF",
-    accentSoft: "rgba(38,65,255,0.14)",
-    eyebrow: "Videography & Photography",
-    headlinePlain: "Frames that",
-    headlineAccent: "linger",
-    heroSupport:
-      "Cinematic capture, visual storytelling, and polished edits that bring your brand's story to life.",
-    heroCta: "Book a Shoot",
-    heroWatch: "Watch Our Work",
-    capabilities: [
-      { icon: Clapperboard, title: "Brand Films", desc: "Cinematic brand stories that build connection." },
-      { icon: Aperture, title: "Commercial Shoots", desc: "High-impact visuals for ads and campaigns." },
-      { icon: Package, title: "Product Photography", desc: "Clean, detailed imagery that sells." },
-      { icon: Camera, title: "Event Coverage", desc: "Professional coverage of events, launches, and more." },
-      { icon: Scissors, title: "Editing & Post", desc: "Expert editing, color grading, and motion polish." },
-      { icon: Wand2, title: "Art Direction", desc: "Creative direction that shapes every visual moment." },
-    ],
-    process: [
-      { title: "Concept", desc: "We define the visual story and the mood behind it." },
-      { title: "Pre-production", desc: "Locations, shot lists, and logistics are locked before the shoot." },
-      { title: "Production", desc: "We capture cinematic footage and stills on the day." },
-      { title: "Post", desc: "Editing, grading, and sound design bring the footage to life." },
-      { title: "Delivery", desc: "Final assets, formatted for web, social, and paid media." },
-    ],
-    stats: [
-      { icon: Users, value: "40+", label: "Brands Trusted Us" },
-      { icon: Video, value: "300+", label: "Brand Videos Produced" },
-      { icon: Sparkles, value: "10,000+", label: "Hours of Creative Work" },
-    ],
-    formula: {
-      inputs: [{ label: "Direction" }, { label: "Capture" }, { label: "Edit" }],
-      output: { label: "A story worth watching" },
-    },
-    closingKicker: "Ready to tell your story?",
-    closingPlain: "Let's make something worth",
-    closingAccent: "watching",
     nextSlug: "meta-ads",
   },
 
   "meta-ads": {
     slug: "meta-ads",
-    order: 5,
+    order: 4,
     accent: "#2641FF",
     accentSoft: "rgba(38,65,255,0.14)",
     eyebrow: "Meta Ads",
@@ -293,7 +253,7 @@ export const serviceContent: Record<string, ServiceContent> = {
 
   "website-design-development": {
     slug: "website-design-development",
-    order: 6,
+    order: 5,
     accent: "#2641FF",
     accentSoft: "rgba(38,65,255,0.14)",
     eyebrow: "Website Design & Development",
@@ -331,6 +291,49 @@ export const serviceContent: Record<string, ServiceContent> = {
     closingKicker: "Ready to build your website?",
     closingPlain: "Let's build something",
     closingAccent: "extraordinary together",
+    nextSlug: "technical-graphics-animation",
+  },
+
+  // DRAFT copy: placeholder until the client sends the real Technical Graphics content.
+  "technical-graphics-animation": {
+    slug: "technical-graphics-animation",
+    order: 6,
+    accent: "#2641FF",
+    accentSoft: "rgba(38,65,255,0.14)",
+    eyebrow: "Technical Graphics & Animation",
+    headlinePlain: "Complex ideas, made",
+    headlineAccent: "crystal clear",
+    heroSupport:
+      "Technical illustrations, 3D renders, and explainer animations that show exactly how a product works.",
+    heroCta: "Start a Technical Project",
+    heroWatch: "View Technical Work",
+    capabilities: [
+      { icon: PencilRuler, title: "Technical Illustration", desc: "Accurate diagrams, cutaways, and exploded views." },
+      { icon: Box, title: "3D Product Renders", desc: "Photoreal renders built straight from product specs." },
+      { icon: Film, title: "Explainer Animation", desc: "Step-by-step animations that explain how things work." },
+      { icon: Layers, title: "Infographics", desc: "Data and processes turned into visuals people actually read." },
+      { icon: Rotate3d, title: "Product Visualisation", desc: "Interactive-ready 360° views and assembly sequences." },
+      { icon: Wand2, title: "Motion Graphics", desc: "Polished motion that brings technical content to life." },
+    ],
+    process: [
+      { title: "Brief", desc: "We learn the product, the specs, and who needs to understand it." },
+      { title: "Script", desc: "The story and key technical points get mapped shot by shot." },
+      { title: "Model", desc: "Accurate 2D and 3D assets are built from your references." },
+      { title: "Animate", desc: "Motion, lighting, and labels bring the explanation together." },
+      { title: "Deliver", desc: "Final files, formatted for web, sales decks, and training." },
+    ],
+    stats: [
+      { icon: Users, value: "40+", label: "Brands Trusted Us" },
+      { icon: Package, value: "1500+", label: "Projects Delivered" },
+      { icon: Sparkles, value: "10,000+", label: "Hours of Creative Work" },
+    ],
+    formula: {
+      inputs: [{ label: "Specs" }, { label: "Design" }, { label: "Motion" }],
+      output: { label: "Clarity that sells" },
+    },
+    closingKicker: "Got something complex to explain?",
+    closingPlain: "Let's make it",
+    closingAccent: "click",
     nextSlug: "branding-design",
   },
 };

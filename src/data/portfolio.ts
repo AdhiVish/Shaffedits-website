@@ -40,7 +40,7 @@ export const portfolio: PortfolioItem[] = [
     category: "Website + Social + Content",
     description:
       "Website, storefront, and a recurring library of carousels and statics designed to work as one connected system rather than one-off assets.",
-    services: ["website-design-development", "social-media-management", "content-creation-animation", "videography-photography"],
+    services: ["website-design-development", "social-media-management", "content-creation-animation"],
     images: [
       asset("E-Commerce Store + Website", "Lspace Website.png"),
       asset("Creative Campaign + Social Media", "Lspace_Carousel01_062026_Slide1.png"),

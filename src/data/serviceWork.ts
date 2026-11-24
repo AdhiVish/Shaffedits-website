@@ -71,7 +71,6 @@ export const serviceWork: Record<string, WorkPiece[]> = {
   "branding-design": strip(brandingArtwork),
   "content-creation-animation": content,
   "social-media-management": [...byClient("Purple Curve"), ...byClient("Lspace"), ...byClient("Cloud Apparels")],
-  "videography-photography": [...shoots, ...byClient("Purple Curve").slice(0, 6), ...cricketeriaBanners.slice(0, 4)],
   "meta-ads": [
     { src: show("t01"), alt: "Cloud Apparels · “Don't buy this shirt” ad" },
     ...byClient("Cloud Apparels").slice(2, 5),
@@ -83,4 +82,6 @@ export const serviceWork: Record<string, WorkPiece[]> = {
     ...cricketeriaBanners.slice(0, 4),
   ],
   "website-design-development": [...strip(websiteArtwork), ...cloudBanners, ...cricketeriaBanners],
+  // Placeholder until technical work is supplied.
+  "technical-graphics-animation": [...shoots, ...cloudBanners.slice(0, 4)],
 };

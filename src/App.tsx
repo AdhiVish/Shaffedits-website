@@ -16,7 +16,7 @@ import NotFound from "@/pages/NotFound";
 import BrandingDesign from "@/pages/services/BrandingDesign";
 import ContentCreationAnimation from "@/pages/services/ContentCreationAnimation";
 import SocialMediaManagement from "@/pages/services/SocialMediaManagement";
-import VideographyPhotography from "@/pages/services/VideographyPhotography";
+import TechnicalGraphicsAnimation from "@/pages/services/TechnicalGraphicsAnimation";
 import MetaAds from "@/pages/services/MetaAds";
 import WebsiteDesignDevelopment from "@/pages/services/WebsiteDesignDevelopment";
 
@@ -51,12 +51,16 @@ function App() {
           />
           <Route
             path="/services/videography-photography"
-            element={<VideographyPhotography />}
+            element={<Navigate to="/services/content-creation-animation" replace />}
           />
           <Route path="/services/meta-ads" element={<MetaAds />} />
           <Route
             path="/services/website-design-development"
             element={<WebsiteDesignDevelopment />}
+          />
+          <Route
+            path="/services/technical-graphics-animation"
+            element={<TechnicalGraphicsAnimation />}
           />
 
           <Route path="*" element={<NotFound />} />
