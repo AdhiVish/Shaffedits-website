@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import logoWhite from "@/assets/logo-white.png";
@@ -18,8 +18,8 @@ const team: Member[] = [
   { name: "Juhainah A", role: "Content & Project Manager" },
   { name: "Adhi", role: "Web Developer" },
   { name: "Rukshanda", role: "Video Editor" },
-  { name: "", role: "" },
-  { name: "", role: "" },
+  { name: "Sanah", role: "Content Creation & Social Media Intern" },
+  { name: "Rifa", role: "Content Creation & Social Media Intern" },
 ];
 
 type Page =
@@ -33,6 +33,7 @@ type Page =
 const FLIP_S = 0.9;
 const EASE = [0.45, 0, 0.2, 1] as const;
 const RATIO = 1.38; // page height / width
+const PHONE_RATIO = 1.85; // phones show two narrow pages side by side, so each page is taller
 
 /* ------------------------------------------------------------------ */
 /* Pages                                                               */
@@ -206,51 +207,6 @@ function renderPage(p: Page, side: "left" | "right") {
 }
 
 /* ------------------------------------------------------------------ */
-/* Background strips of real work (kept from the old section)          */
-/* ------------------------------------------------------------------ */
-
-const TOP_ROW = ["t01", "t04", "t02", "t07", "t10", "t03", "t05", "t11"];
-const BOTTOM_ROW = ["t06", "t12", "t08", "t09", "t03", "t01", "t05", "t02"];
-
-function WorkRow({ ids, reverse, className }: { ids: string[]; reverse?: boolean; className: string }) {
-  const base = import.meta.env.BASE_URL;
-  return (
-    <div
-      aria-hidden
-      className={`pointer-events-none absolute inset-x-0 z-0 h-28 overflow-hidden opacity-[0.18] md:h-36 ${className}`}
-      style={{
-        WebkitMaskImage: "linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent)",
-        maskImage: "linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent)",
-      }}
-    >
-      <div
-        className="animate-marquee flex h-full w-max gap-4"
-        style={
-          {
-            "--marquee-duration": reverse ? "90s" : "75s",
-            animationDirection: reverse ? "reverse" : "normal",
-          } as CSSProperties
-        }
-      >
-        {[0, 1].map((rep) =>
-          ids.map((id, i) => (
-            <img
-              key={rep + "-" + i}
-              src={`${base}showcase/${id}.webp`}
-              alt=""
-              draggable={false}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-auto shrink-0 rounded-lg object-cover"
-            />
-          )),
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* The flipbook                                                        */
 /* ------------------------------------------------------------------ */
 
@@ -274,7 +230,7 @@ export function Team() {
       setW(
         Math.round(
           small
-            ? Math.min(iw - 56, 360, (ih * 0.6) / RATIO)
+            ? Math.min((iw - 56) / 2, (ih * 0.66) / PHONE_RATIO)
             : Math.min(400, (iw - 160) / 2, (ih * 0.56) / RATIO),
         ),
       );
@@ -287,21 +243,16 @@ export function Team() {
   }, []);
 
   // Each person gets a spread: photo on the left page, details on the right.
-  // Desktop: a real two-page spread, so each leaf carries a page on both sides.
-  // Phone: one page at a time (photo, then details), plain paper behind each.
+  // A real two-page spread on every screen, so each leaf carries a page on both sides.
   const inner: Page[] = team.flatMap((m, i) => [
     { kind: "photo", m, i } as Page,
     { kind: "info", m, i } as Page,
   ]);
   const leaves: [Page, Page][] = [];
-  if (phone) {
-    [{ kind: "cover" } as Page, ...inner, { kind: "end" } as Page].forEach((p) => leaves.push([p, { kind: "blank" }]));
-  } else {
-    const pages: Page[] = [{ kind: "cover" }, ...inner, { kind: "back" }];
-    for (let i = 0; i < pages.length; i += 2) leaves.push([pages[i], pages[i + 1]]);
-  }
+  const pages: Page[] = [{ kind: "cover" }, ...inner, { kind: "back" }];
+  for (let i = 0; i < pages.length; i += 2) leaves.push([pages[i], pages[i + 1]]);
   const L = leaves.length;
-  const maxFlip = phone ? L - 1 : L;
+  const maxFlip = L;
 
   // Keep the position valid when switching between phone and desktop layouts.
   useEffect(() => {
@@ -350,22 +301,23 @@ export function Team() {
   };
 
   const onBookClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (phone) return next();
     const b = e.currentTarget.getBoundingClientRect();
     if (e.clientX - b.left < b.width / 2) prev();
     else next();
   };
 
-  const H = Math.round(W * RATIO);
+  const H = Math.round(W * (phone ? PHONE_RATIO : RATIO));
   // Closed books sit in the middle: the cover on its own, or the back cover on its own.
-  const shift = phone ? 0 : flipped === 0 ? -W / 2 : flipped === L ? W / 2 : 0;
+  const shift = flipped === 0 ? -W / 2 : flipped === L ? W / 2 : 0;
+  // type scale: phone pages are narrow, so their text is scaled up a little relative to the page
+  const fontSize = phone ? (W / 255) * 16 : (W / 360) * 16;
 
   // Label under the book.
   const who = (p?: Page) => (p && (p.kind === "photo" || p.kind === "info") ? p.i : null);
   let label = "Cover";
   if (flipped > 0) {
-    const i = phone ? who(leaves[flipped][0]) : flipped === L ? null : who(leaves[flipped - 1][1]);
-    label = i !== null ? num(i) : phone ? "The end" : "Back cover";
+    const i = flipped === L ? null : who(leaves[flipped - 1][1]);
+    label = i !== null ? num(i) : "Back cover";
   }
 
   return (
@@ -379,8 +331,6 @@ export function Team() {
         className="pointer-events-none absolute left-1/2 top-[55%] h-[50rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{ background: "radial-gradient(closest-side, rgba(38,65,255,0.14), rgba(38,65,255,0.05) 55%, transparent)" }}
       />
-      <WorkRow ids={TOP_ROW} className="top-6" />
-      <WorkRow ids={BOTTOM_ROW} reverse className="bottom-4" />
 
       <div className="relative z-10 mx-auto max-w-6xl">
         <motion.div
@@ -397,7 +347,7 @@ export function Team() {
         </motion.div>
 
         {/* ---- the book ---- */}
-        <div className={phone ? "mx-auto overflow-hidden" : "mx-auto"} style={{ width: phone ? W : 2 * W, height: H + 40, paddingTop: 20 }}>
+        <div className="mx-auto" style={{ width: 2 * W, height: H + 40, paddingTop: 20 }}>
           <motion.div
             role="group"
             aria-roledescription="flipbook"
@@ -416,7 +366,7 @@ export function Team() {
               else if (dx > 40) prev();
             }}
             className="relative cursor-pointer select-none outline-none"
-            style={{ width: phone ? W : 2 * W, height: H, perspective: 2200, fontSize: (W / 360) * 16 }}
+            style={{ width: 2 * W, height: H, perspective: phone ? 1400 : 2200, fontSize }}
             animate={{ x: shift }}
             transition={{ duration: dur * 0.8, ease: EASE }}
           >
@@ -425,8 +375,8 @@ export function Team() {
               aria-hidden
               className="pointer-events-none absolute -bottom-6 h-10 rounded-[50%] bg-black/70 blur-xl"
               animate={{
-                left: phone ? "6%" : flipped === 0 ? "53%" : flipped === L ? "3%" : "3%",
-                right: phone ? "6%" : flipped === 0 ? "3%" : flipped === L ? "53%" : "3%",
+                left: flipped === 0 ? "53%" : "3%",
+                right: flipped === L ? "53%" : "3%",
               }}
               transition={{ duration: dur * 0.8, ease: EASE }}
             />
@@ -437,10 +387,10 @@ export function Team() {
               const delay = resetting ? 0.12 * (L - 1 - i) : 0;
               return (
                 <motion.div
-                  key={(phone ? "p" : "d") + i}
+                  key={i}
                   className="absolute top-0"
                   style={{
-                    left: phone ? 0 : W,
+                    left: W,
                     width: W,
                     height: H,
                     zIndex: z,

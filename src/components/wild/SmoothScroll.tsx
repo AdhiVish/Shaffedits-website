@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { isPhone } from "@/lib/usePhone";
 
 declare global {
   interface Window {
@@ -16,6 +17,9 @@ declare global {
 export function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Phones: plain native scrolling. Lenis only smooths mouse wheels anyway, but its
+    // per-frame loop and scroll-state class flips still cost frames on a phone.
+    if (isPhone()) return;
     const lenis = new Lenis({
       lerp: 0.12, // higher = catches up faster (0.085 felt floaty/slow)
       wheelMultiplier: 1,

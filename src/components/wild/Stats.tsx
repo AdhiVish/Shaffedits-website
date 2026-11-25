@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useTransform } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
 import { GlobeCollabs } from "@/components/wild/GlobeCollabs";
+import { useIsPhone } from "@/lib/usePhone";
 
 const STATS = [
   { value: 40, suffix: "+", label: "brands trusted us" },
@@ -12,7 +13,7 @@ const STATS = [
   { value: 8, suffix: "+", label: "years in the game" },
 ];
 
-function Stat({ value, suffix, label, i }: { value: number; suffix: string; label: string; i: number }) {
+function Stat({ value, suffix, label, i, phone }: { value: number; suffix: string; label: string; i: number; phone: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   // the number counts in lock-step with your scroll; scroll back and it counts down
   const { scrollYProgress } = useJsScroll({ target: ref, offset: ["start end", "center 0.55"] });
@@ -25,33 +26,37 @@ function Stat({ value, suffix, label, i }: { value: number; suffix: string; labe
   return (
     <motion.div
       ref={ref}
-      style={{ x, skewX: skew }}
-      className={`flex flex-col items-baseline gap-2 border-t border-white/10 py-6 md:flex-row md:gap-10 ${
+      style={phone ? undefined : { x, skewX: skew }}
+      className={`flex flex-col items-baseline gap-1.5 border-t border-white/10 py-4 md:flex-row md:gap-10 md:py-6 ${
         flip ? "md:flex-row-reverse md:text-right" : ""
       }`}
     >
-      <span className="font-display text-[clamp(3.25rem,9.5vw,8rem)] font-black leading-[0.85] tracking-tighter tabular-nums">
+      <span className="font-display text-[clamp(1.9rem,9vw,2.6rem)] md:text-[clamp(3.25rem,9.5vw,8rem)] font-black leading-[0.85] tracking-tighter tabular-nums">
         <span className="lime-text pr-[0.04em]">
           <motion.span>{text}</motion.span>
           {suffix}
         </span>
       </span>
-      <span className="max-w-[14ch] font-display text-lg font-medium leading-tight text-white md:text-2xl">{label}</span>
+      <span className="max-w-[14ch] font-display text-sm font-medium leading-tight text-white md:text-2xl">{label}</span>
     </motion.div>
   );
 }
 
 export function Stats() {
+  const phone = useIsPhone();
   return (
-    <section className="bg-black px-6 py-28 text-white md:py-40">
+    <section className="bg-black px-6 py-16 text-white md:py-40">
       <div className="mx-auto max-w-6xl">
-        <p className="mb-6 text-xs font-medium uppercase tracking-[0.4em] text-white/50">By the numbers</p>
-        <h2 className="mb-16 max-w-3xl font-display text-[clamp(2rem,5vw,4rem)] font-black leading-none tracking-tight">
+        <p className="mb-4 text-xs font-medium uppercase md:mb-6 tracking-[0.4em] text-white/50">By the numbers</p>
+        <h2 className="mb-8 max-w-3xl font-display md:mb-16 text-[clamp(2rem,5vw,4rem)] font-black leading-none tracking-tight">
           Numbers, because <span className="font-light italic text-white/50">clients like numbers.</span>
         </h2>
-        {STATS.map((s, i) => (
-          <Stat key={s.label} {...s} i={i} />
-        ))}
+        {/* phones: a 2 x 3 grid that fits on one screen; desktop: the big stacked list */}
+        <div className="grid grid-cols-2 gap-x-5 md:block">
+          {STATS.map((s, i) => (
+            <Stat key={s.label} {...s} i={i} phone={phone} />
+          ))}
+        </div>
         <GlobeCollabs />
       </div>
     </section>

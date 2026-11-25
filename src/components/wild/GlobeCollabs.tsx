@@ -43,7 +43,8 @@ function Clock({ tz, now }: { tz: string; now: Date }) {
 export function GlobeCollabs() {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const near = useInView(wrap, { margin: "200px" });
+  // phones start the WebGL globe only once it is really on screen; desktop warms it up a little early
+  const near = useInView(wrap, { margin: isPhone() ? "0px" : "200px" });
   const shown = useInView(wrap, { once: true, amount: 0.3 });
   const [active, setActive] = useState(7);
   const [ready, setReady] = useState(false);
@@ -115,7 +116,11 @@ export function GlobeCollabs() {
             setActive(best);
           }
         }
-        state.markers = COUNTRIES.map((k, i) => ({ location: k.loc, size: i === st.active ? 0.11 : 0.045 }));
+        const ms = COUNTRIES.map((k, i) => ({ location: k.loc, size: i === st.active ? 0.11 : 0.045 }));
+        // cobe 0.6.5 bug: markers updated here only get markers.length / 2 drawn (it forgets
+        // that each marker takes two slots), so the last 4 countries lost their dots.
+        // Passing the list twice makes it draw all 8 (the copies are never read).
+        state.markers = [...ms, ...ms];
       },
     });
     const fade = window.setTimeout(() => setReady(true), 80);
@@ -159,13 +164,13 @@ export function GlobeCollabs() {
   };
 
   return (
-    <div ref={wrap} className="relative mt-24 grid items-center gap-10 border-t border-white/10 pt-16 md:mt-32 md:grid-cols-[1fr_1.05fr] md:gap-6 md:pt-20">
+    <div ref={wrap} className="relative mt-12 grid items-center gap-6 border-t border-white/10 pt-8 md:mt-32 md:gap-10 md:grid-cols-[1fr_1.05fr] md:gap-6 md:pt-20">
       <div className="order-2 md:order-1">
         <motion.p
           initial={{ opacity: 0, x: -20 }}
           animate={shown ? { opacity: 1, x: 0 } : undefined}
           transition={{ duration: 0.7 }}
-          className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-[#2641FF] md:text-xs"
+          className="mb-2 flex items-center gap-2 text-[10px] md:mb-4 font-bold uppercase tracking-[0.35em] text-[#2641FF] md:text-xs"
         >
           <Plane className="size-4" /> Global collaborations
         </motion.p>
@@ -173,7 +178,7 @@ export function GlobeCollabs() {
           initial={{ opacity: 0, y: 30 }}
           animate={shown ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8 font-display text-[clamp(2.2rem,5vw,4.2rem)] font-black leading-[0.92] tracking-tight"
+          className="mb-3 font-display text-[clamp(1.9rem,5vw,4.2rem)] md:mb-8 font-black leading-[0.92] tracking-tight"
         >
           Our work
           <br />
@@ -196,13 +201,13 @@ export function GlobeCollabs() {
                   onFocus={() => focusOn(i)}
                   onClick={() => focusOn(i)}
                   onBlur={release}
-                  className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] bg-transparent py-2.5 text-left md:py-3"
+                  className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] bg-transparent py-[7px] text-left md:py-3"
                 >
                   <span className={`w-6 font-display text-xs font-bold tabular-nums transition-colors ${on ? "text-[#2641FF]" : "text-white/25"}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span
-                    className={`flex-1 font-display text-[clamp(1.35rem,2.6vw,2.2rem)] font-black leading-none tracking-tight transition-all duration-500 ${
+                    className={`flex-1 font-display text-[clamp(1.05rem,2.6vw,2.2rem)] font-black leading-none tracking-tight transition-all duration-500 ${
                       on ? "translate-x-2 text-white" : "text-white/25 group-hover:text-white/60"
                     }`}
                   >
@@ -221,7 +226,7 @@ export function GlobeCollabs() {
         </ul>
       </div>
 
-      <div className="relative order-1 mx-auto w-full max-w-[560px] md:order-2">
+      <div className="relative order-1 mx-auto w-full max-w-[min(200px,30svh)] md:order-2 md:max-w-[560px]">
         {/* soft white halo behind the globe */}
         <div aria-hidden className="pointer-events-none absolute -inset-[4%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.06),rgba(255,255,255,0.025)_60%,transparent)]" />
         <motion.div
@@ -241,7 +246,7 @@ export function GlobeCollabs() {
             className="h-full w-full cursor-grab touch-pan-y transition-opacity duration-700 active:cursor-grabbing"
             style={{ opacity: ready ? 1 : 0 }}
           />
-          <p className="pointer-events-none absolute inset-x-0 bottom-0 text-center text-[10px] uppercase tracking-[0.35em] text-white/35">
+          <p className="pointer-events-none absolute inset-x-0 -bottom-3 text-center text-[9px] uppercase tracking-[0.35em] text-white/35 md:bottom-0 md:text-[10px]">
             drag to spin
           </p>
         </motion.div>

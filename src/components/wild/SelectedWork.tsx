@@ -151,7 +151,7 @@ function Slides({ images, interval, offset, running, pos }: { images: string[]; 
   );
 }
 
-function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) {
+function Tile({ p, index, show, live }: { p: Project; index: number; show: boolean; live: boolean }) {
   return (
     <motion.div
       initial={{ clipPath: "inset(100% 0 0 0 round 24px)", y: 40 }}
@@ -159,7 +159,7 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
       transition={{ duration: 1.1, delay: 0.15 + index * 0.1, ease: EASE }}
       className={`relative min-h-0 overflow-hidden rounded-2xl bg-neutral-900 md:rounded-3xl ${p.area}`}
     >
-      <Slides pos={p.pos} images={p.images} interval={p.big ? 3200 : 2700 + index * 230} offset={1400 + index * 520} running={show} />
+      <Slides pos={p.pos} images={p.images} interval={p.big ? 3200 : 2700 + index * 230} offset={1400 + index * 520} running={live} />
 
       {/* legibility gradient + client name */}
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/15 to-black/30" />
@@ -204,6 +204,8 @@ function Tile({ p, index, show }: { p: Project; index: number; show: boolean }) 
 export function SelectedWork() {
   const ref = useRef<HTMLElement>(null);
   const show = useInView(ref, { once: true, amount: 0.3 });
+  // slideshows only tick while the wall is actually on screen (no wipes running off screen)
+  const onScreen = useInView(ref);
 
   return (
     <section
@@ -249,7 +251,7 @@ export function SelectedWork() {
 
       <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-[1.3fr_1fr_0.9fr_auto] gap-2.5 md:gap-4 lg:grid-cols-5 lg:grid-rows-2">
         {PROJECTS.map((p, i) => (
-          <Tile key={p.client} p={p} index={i} show={show} />
+          <Tile key={p.client} p={p} index={i} show={show} live={show && onScreen} />
         ))}
 
         {/* our videos live in the showreel just below */}
