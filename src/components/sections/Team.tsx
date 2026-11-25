@@ -18,7 +18,7 @@ const team: Member[] = [
     bio: "Leads the agency's creative vision, brand strategy, client relationships, and campaign direction while ensuring every project creates meaningful business impact.",
     signature: sig("sig-shafeeq.webp"),
   },
-  { name: "Rukshanda", role: "Video Editor" },
+  { name: "Rukshanda", role: "Video Editor", signature: sig("sig-rukshanda.webp") },
   { name: "Adhi", role: "Web Developer", signature: sig("sig-adhi.webp") },
   { name: "Juhainah A", role: "Content & Project Manager", signature: sig("sig-juhainah.webp") },
   { name: "Sanah", role: "Content Creation & Social Media Intern", signature: sig("sig-sanah.webp") },
