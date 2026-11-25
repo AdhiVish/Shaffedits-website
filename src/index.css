@@ -316,3 +316,26 @@ html.lenis-smooth { scroll-behavior: auto !important; }
 }
 .lime-text { animation-play-state: paused; }
 [data-sheen-on].lime-text { animation-play-state: running; }
+
+/* ---------- PHONE — lighter, minimal experience (desktop untouched) ----------
+   Phone GPUs struggle with blur filters, huge soft shadows and effects that
+   repaint every frame, so on small screens those are switched off or made
+   simpler. The JS side (useIsPhone) also stops the endless hero bobbing, the
+   drifting "disciplines" word and the marquee lean, and draws the globe at a
+   lower resolution. */
+@media (max-width: 767px) {
+  /* no live background blur behind the navbar / small pills — just a darker fill */
+  [class*="backdrop-blur"] { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .nav-pill { background-color: rgba(0, 0, 0, 0.82) !important; }
+
+  /* big blurred halos behind buttons */
+  .glow-halo { display: none; }
+
+  /* hero cards: one light shadow instead of three large ones, no blur filter */
+  .hero-card { box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(38, 65, 255, 0.28) !important; filter: none !important; }
+
+  /* What We Do: the shine that sweeps each card on a loop */
+  .svc-shine::before { animation: none; opacity: 0; }
+
+  /* film grain / sheen are already off on phones (see above) */
+}

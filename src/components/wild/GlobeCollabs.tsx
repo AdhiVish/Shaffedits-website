@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import createGlobe from "cobe";
 import { motion, useInView } from "motion/react";
 import { Plane } from "lucide-react";
+import { isPhone } from "@/lib/usePhone";
 
 /** Countries Shaffedits has collaborated with: marker position (lat, lng) and time zone for the live clock. */
 const COUNTRIES = [
@@ -67,15 +68,17 @@ export function GlobeCollabs() {
     ro.observe(c);
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // phones: render at a lower resolution with fewer dots so the GPU keeps up
+    const dpr = isPhone() ? 1.5 : 2;
     const globe = createGlobe(c, {
-      devicePixelRatio: 2,
-      width: width * 2,
-      height: width * 2,
+      devicePixelRatio: dpr,
+      width: width * dpr,
+      height: width * dpr,
       phi: st.phi,
       theta: st.theta,
       dark: 1,
       diffuse: 1.15,
-      mapSamples: 16000,
+      mapSamples: dpr < 2 ? 10000 : 16000,
       mapBrightness: 5.5,
       mapBaseBrightness: 0.02,
       baseColor: [0.22, 0.22, 0.22],
@@ -93,8 +96,8 @@ export function GlobeCollabs() {
         st.theta += (st.tTheta - st.theta) * 0.08;
         state.phi = st.phi;
         state.theta = st.theta;
-        state.width = width * 2;
-        state.height = width * 2;
+        state.width = width * dpr;
+        state.height = width * dpr;
         // which country faces us right now (while drifting or dragging)
         if (st.focus < 0) {
           const front = lngAt(st.phi);

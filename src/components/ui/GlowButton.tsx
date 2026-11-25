@@ -24,7 +24,7 @@ export const GlowButton = forwardRef<HTMLButtonElement, Props>(
         <span
           aria-hidden
           className={cn(
-            "pointer-events-none absolute -inset-3 rounded-full blur-2xl opacity-40 transition-all duration-500 group-hover:opacity-90 group-hover:blur-3xl",
+            "glow-halo pointer-events-none absolute -inset-3 rounded-full blur-2xl opacity-40 transition-all duration-500 group-hover:opacity-90 group-hover:blur-3xl",
             lime ? "bg-[#AEFF00]/45" : onDark ? "bg-white/60" : "bg-black/50",
           )}
         />

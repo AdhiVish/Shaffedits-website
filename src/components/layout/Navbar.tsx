@@ -80,7 +80,7 @@ export function Navbar() {
           ease: [0.25, 1, 0.5, 1],
         }}
         className={cn(
-          "relative overflow-hidden border backdrop-blur-md transition-all duration-300",
+          "nav-pill relative overflow-hidden border backdrop-blur-md transition-all duration-300",
           solid
             ? "border-white/15 bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
             : "border-white/10 bg-white/[0.05]"

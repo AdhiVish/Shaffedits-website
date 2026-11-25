@@ -10,6 +10,7 @@ import {
   useVelocity,
 } from "motion/react";
 import { cn } from "@/lib/utils";
+import { isPhone } from "@/lib/usePhone";
 
 const wrap = (min: number, max: number, v: number) => {
   const r = max - min;
@@ -39,7 +40,9 @@ export function VelocityMarquee({
   const velocity = useVelocity(scrollY);
   const smooth = useSpring(velocity, { damping: 50, stiffness: 400 });
   const factor = useTransform(smooth, [0, 1000], [0, 5], { clamp: false });
-  const skewX = useTransform(smooth, [-2500, 2500], skew ? [14, -14] : [0, 0]);
+  // no lean on phones: skewing big text every scroll frame is costly there
+  const lean = skew && !isPhone();
+  const skewX = useTransform(smooth, [-2500, 2500], lean ? [14, -14] : [0, 0]);
   const x = useTransform(baseX, (v) => `${wrap(-25, -50, v)}%`);
   const dir = useRef(1);
   const box = useRef<HTMLDivElement>(null);

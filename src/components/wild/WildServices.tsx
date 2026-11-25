@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
 import { VelocityMarquee } from "./VelocityMarquee";
+import { useIsPhone } from "@/lib/usePhone";
 
 const base = import.meta.env.BASE_URL;
 
@@ -42,11 +43,15 @@ function useMedia(q: string) {
   return m;
 }
 
-function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; cols: 2 | 3 }) {
+function ServiceCard({ index, dealt, cols, phone }: { index: number; dealt: boolean; cols: 2 | 3; phone: boolean }) {
   const s = services[index];
   const Icon = s.icon;
   const ref = useRef<HTMLElement>(null);
   const still = useMedia("(prefers-reduced-motion: reduce)");
+
+  // Phones (2 columns): a checkerboard, so each row flips: black/white, then white/black…
+  // Everywhere else it stays 1 black, 2 white, 3 black…
+  const theme = phone ? (Math.floor(index / 2) + index) % 2 : index % 2;
 
   // Where this card sits relative to the middle of the grid: the deck it is dealt from.
   const rows = 6 / cols;
@@ -88,7 +93,7 @@ function ServiceCard({ index, dealt, cols }: { index: number; dealt: boolean; co
         opacity: { duration: 0.35, delay: index * 0.04 },
       }}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000, zIndex: 10 - index }}
-      className={`svc-card group relative isolate min-h-0 overflow-hidden rounded-2xl transition-[filter] duration-500 group-hover/grid:[filter:brightness(.45)_saturate(.6)] hover:![filter:none] md:rounded-[1.6rem] ${THEME_CLS[index % 2]}`}
+      className={`svc-card group relative isolate min-h-0 overflow-hidden rounded-2xl transition-[filter] duration-500 group-hover/grid:[filter:brightness(.45)_saturate(.6)] hover:![filter:none] md:rounded-[1.6rem] ${THEME_CLS[theme]}`}
     >
       <Link to={s.path} data-cursor="Open" className="absolute inset-0 z-30" aria-label={`${s.title}: ${s.cta}`} />
 
@@ -174,6 +179,7 @@ export function WildServices() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.35 });
   const desktop = useMedia("(min-width: 1024px)");
+  const phone = useIsPhone();
 
   return (
     <section
@@ -185,7 +191,7 @@ export function WildServices() {
       <motion.div
         aria-hidden
         initial={{ x: "8%" }}
-        animate={{ x: "-30%" }}
+        animate={phone ? undefined : { x: "-30%" }}
         transition={{ duration: 40, repeat: Infinity, repeatType: "mirror", ease: "linear" }}
         className="text-outline font-band pointer-events-none absolute bottom-[-5vw] left-0 whitespace-nowrap text-[26vw] font-black uppercase leading-none text-white/[0.07]"
       >
@@ -221,7 +227,7 @@ export function WildServices() {
 
       <div className="group/grid relative grid min-h-0 flex-1 grid-cols-2 grid-rows-3 gap-2.5 md:gap-4 lg:grid-cols-3 lg:grid-rows-2">
         {services.map((sv, i) => (
-          <ServiceCard key={sv.slug} index={i} dealt={inView} cols={desktop ? 3 : 2} />
+          <ServiceCard key={sv.slug} index={i} dealt={inView} cols={desktop ? 3 : 2} phone={phone} />
         ))}
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useJsScroll } from "@/components/wild/useJsScroll";
+import { useIsPhone } from "@/lib/usePhone";
 import { GlowButton } from "../ui/GlowButton";
 import { ArrowButton } from "../ui/ArrowButton";
 import logoWhite from "@/assets/logo-white.png";
@@ -44,6 +45,8 @@ const CARDS: Card[] = [
 ];
 
 function FloatingCard({ card, index, progress }: { card: Card; index: number; progress: MotionValue<number> }) {
+  // Phones: no endless bobbing (it repaints every frame), the cards just sit still.
+  const phone = useIsPhone();
   // On scroll the cards get flung out of the frame toward the viewer.
   const x = useTransform(progress, [0, 0.7], ["0vw", `${card.fx * 42}vw`]);
   const y = useTransform(progress, [0, 0.7], ["0vh", `${card.fy * 38}vh`]);
@@ -70,14 +73,14 @@ function FloatingCard({ card, index, progress }: { card: Card; index: number; pr
             alt=""
             draggable={false}
             decoding="async"
-            className="block h-auto w-full rounded-xl"
+            className="hero-card block h-auto w-full rounded-xl"
             style={{
               boxShadow: `0 40px 70px -24px rgba(0,0,0,0.9), 0 0 0 1px ${
                 card.far ? "rgba(255,255,255,0.08)" : "rgba(38,65,255,0.28)"
               }, 0 0 40px -8px rgba(38,65,255,${card.far ? 0.05 : 0.16})`,
               filter: card.far ? "blur(1.5px) saturate(0.8)" : undefined,
             }}
-            animate={{ y: [0, -14, 0], rotate: [0, card.fx * 2, 0] }}
+            animate={phone ? undefined : { y: [0, -14, 0], rotate: [0, card.fx * 2, 0] }}
             transition={{ duration: 6 + (index % 4), repeat: Infinity, ease: "easeInOut", delay: index * 0.4 }}
           />
         </motion.div>
@@ -120,6 +123,7 @@ function MaskedLine({
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const phone = useIsPhone();
   const spotRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
@@ -236,7 +240,7 @@ export function Hero() {
         <motion.div
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-1/2 h-[80vmax] w-[80vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.045),rgba(255,255,255,0.02)_55%,transparent)]"
-          animate={{ x: ["-18%", "14%", "-6%", "-18%"], y: ["-10%", "8%", "14%", "-10%"], scale: [1, 1.15, 0.95, 1] }}
+          animate={phone ? undefined : { x: ["-18%", "14%", "-6%", "-18%"], y: ["-10%", "8%", "14%", "-10%"], scale: [1, 1.15, 0.95, 1] }}
           transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
         />
 
