@@ -11,13 +11,13 @@ const base = import.meta.env.BASE_URL;
 // a `src` show a placeholder and open a "coming soon" player.
 type Video = { title: string; client: string; src?: string; poster?: string };
 const videos: Video[] = [
-  { title: "Brand film", client: "Video 01" },
-  { title: "Product reel", client: "Video 02" },
-  { title: "Campaign ad", client: "Video 03" },
-  { title: "Showreel 2026", client: "Shaffedits" },
-  { title: "Behind the scenes", client: "Video 05" },
-  { title: "Motion piece", client: "Video 06" },
-  { title: "Launch teaser", client: "Video 07" },
+  { title: "Reel 04", client: "Shaffedits", src: `${base}videos/reel-04.mp4`, poster: `${base}videos/reel-04.webp` },
+  { title: "Reel 05", client: "Shaffedits", src: `${base}videos/reel-05.mp4`, poster: `${base}videos/reel-05.webp` },
+  { title: "Reel 06", client: "Shaffedits", src: `${base}videos/reel-06.mp4`, poster: `${base}videos/reel-06.webp` },
+  { title: "Showreel 2026", client: "Shaffedits", src: `${base}videos/showreel.mp4`, poster: `${base}videos/showreel.webp` },
+  { title: "Reel 08", client: "Shaffedits", src: `${base}videos/reel-08.mp4`, poster: `${base}videos/reel-08.webp` },
+  { title: "Reel 08", client: "Lspace", src: `${base}videos/lspace-reel-08.mp4`, poster: `${base}videos/lspace-reel-08.webp` },
+  { title: "Reel 06 · June", client: "Shaffedits", src: `${base}videos/reel-06-jun.mp4`, poster: `${base}videos/reel-06-jun.webp` },
 ];
 
 const RATIO = 16 / 9; // vertical reel cards
