@@ -185,7 +185,8 @@ export function GlobeCollabs() {
           <span className="chrome-text pr-[0.06em] font-light italic">travels.</span>
         </motion.h3>
 
-        <ul onMouseLeave={release}>
+        {/* phones: two columns of countries so the bigger globe still fits on one screen */}
+        <ul onMouseLeave={release} className="grid grid-cols-2 gap-x-4 md:block">
           {COUNTRIES.map((k, i) => {
             const on = i === active;
             return (
@@ -201,19 +202,19 @@ export function GlobeCollabs() {
                   onFocus={() => focusOn(i)}
                   onClick={() => focusOn(i)}
                   onBlur={release}
-                  className="group flex w-full cursor-pointer items-baseline gap-4 border-b border-white/[0.07] bg-transparent py-[7px] text-left md:py-3"
+                  className="group flex w-full cursor-pointer items-baseline gap-2 border-b md:gap-4 border-white/[0.07] bg-transparent py-[6px] text-left md:py-3"
                 >
                   <span className={`w-6 font-display text-xs font-bold tabular-nums transition-colors ${on ? "text-[#2641FF]" : "text-white/25"}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span
-                    className={`flex-1 font-display text-[clamp(1.05rem,2.6vw,2.2rem)] font-black leading-none tracking-tight transition-all duration-500 ${
+                    className={`flex-1 font-display text-[clamp(0.95rem,2.6vw,2.2rem)] font-black leading-none tracking-tight transition-all duration-500 ${
                       on ? "translate-x-2 text-white" : "text-white/25 group-hover:text-white/60"
                     }`}
                   >
                     {k.name}
                   </span>
-                  <span className={`text-right text-[10px] uppercase tracking-[0.2em] transition-opacity duration-500 md:text-[11px] ${on ? "opacity-100" : "opacity-0"}`}>
+                  <span className={`hidden text-right text-[10px] uppercase md:inline tracking-[0.2em] transition-opacity duration-500 md:text-[11px] ${on ? "opacity-100" : "opacity-0"}`}>
                     <span className="text-white/45">{k.city}</span>
                     <span className="ml-2 font-display font-bold tabular-nums text-[#2641FF]">
                       <Clock tz={k.tz} now={now} />
@@ -226,7 +227,7 @@ export function GlobeCollabs() {
         </ul>
       </div>
 
-      <div className="relative order-1 mx-auto w-full max-w-[min(200px,30svh)] md:order-2 md:max-w-[560px]">
+      <div className="relative order-1 mx-auto w-full max-w-[min(310px,45svh)] md:order-2 md:max-w-[560px]">
         {/* soft white halo behind the globe */}
         <div aria-hidden className="pointer-events-none absolute -inset-[4%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.06),rgba(255,255,255,0.025)_60%,transparent)]" />
         <motion.div
@@ -247,7 +248,14 @@ export function GlobeCollabs() {
             style={{ opacity: ready ? 1 : 0 }}
           />
           <p className="pointer-events-none absolute inset-x-0 -bottom-3 text-center text-[9px] uppercase tracking-[0.35em] text-white/35 md:bottom-0 md:text-[10px]">
-            drag to spin
+            <span className="hidden md:inline">drag to spin</span>
+            {/* phones: the city + live time of the highlighted country sits under the globe */}
+            <span className="md:hidden">
+              <span className="text-white/55">{COUNTRIES[active].city}</span>
+              <span className="ml-2 font-display font-bold tabular-nums text-[#2641FF]">
+                <Clock tz={COUNTRIES[active].tz} now={now} />
+              </span>
+            </span>
           </p>
         </motion.div>
       </div>

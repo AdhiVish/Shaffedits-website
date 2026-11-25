@@ -9,17 +9,20 @@ type Member = { name: string; role: string; bio?: string; image?: string; signat
 // Add `image` (a path under public/) once a photo arrives, and `bio` for the description.
 // The signature is drawn from the name in a handwritten font; set `signature` to an
 // image path (transparent PNG/SVG) to use a real one instead.
+const sig = (f: string) => `${import.meta.env.BASE_URL}team/${f}`;
+
 const team: Member[] = [
   {
     name: "Mohammed Shafeeq",
     role: "Founder & Creative Director",
     bio: "Leads the agency's creative vision, brand strategy, client relationships, and campaign direction while ensuring every project creates meaningful business impact.",
+    signature: sig("sig-shafeeq.webp"),
   },
-  { name: "Juhainah A", role: "Content & Project Manager" },
-  { name: "Adhi", role: "Web Developer" },
   { name: "Rukshanda", role: "Video Editor" },
-  { name: "Sanah", role: "Content Creation & Social Media Intern" },
-  { name: "Rifa", role: "Content Creation & Social Media Intern" },
+  { name: "Adhi", role: "Web Developer", signature: sig("sig-adhi.webp") },
+  { name: "Juhainah A", role: "Content & Project Manager", signature: sig("sig-juhainah.webp") },
+  { name: "Sanah", role: "Content Creation & Social Media Intern", signature: sig("sig-sanah.webp") },
+  { name: "Rifa", role: "Content Creation & Social Media Intern", signature: sig("sig-rifa.webp") },
 ];
 
 type Page =
@@ -151,9 +154,9 @@ function InfoPage({ m, i, side }: { m: Member; i: number; side: "left" | "right"
 
         {/* signature */}
         <div className="mt-[1em]">
-          <div className="flex h-[3.2em] items-end overflow-hidden">
+          <div className="flex h-[4.6em] items-end overflow-hidden">
             {open ? null : m.signature ? (
-              <img src={m.signature} alt={`${m.name}'s signature`} draggable={false} className="max-h-full max-w-[75%] object-contain" />
+              <img src={m.signature} alt={`${m.name}'s signature`} draggable={false} className="max-h-full max-w-[85%] object-contain object-left-bottom" />
             ) : (
               <span
                 className="-mb-[0.15em] max-w-full whitespace-nowrap leading-none text-[#1a1f4d]"

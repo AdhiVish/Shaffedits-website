@@ -74,10 +74,12 @@ export function Testimonials() {
       className="bg-black px-6 py-28 text-white md:py-40"
     >
       <div className="mx-auto max-w-4xl text-center">
-        <p className="mb-6 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
+        <p className="mb-6 text-xs font-bold uppercase tracking-[0.4em] text-[#2641FF]">
           Client Reviews / 05
         </p>
-        <Quote className="mx-auto mb-8 h-10 w-10 text-white/30" strokeWidth={1.5} />
+        <span className="chrome-bg mx-auto mb-8 grid size-14 place-items-center rounded-full">
+          <Quote className="h-6 w-6 fill-current" strokeWidth={1.5} />
+        </span>
         {/* only hovering the review itself pauses it (the section fills the screen, so a resting cursor would always pause it) */}
         <div className="relative min-h-55" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
           <AnimatePresence mode="wait">
@@ -91,7 +93,8 @@ export function Testimonials() {
             >
               "{t.quote}"
               <footer className="mt-10 text-sm font-normal not-italic text-white/60">
-                <span className="font-semibold text-white">{t.name}</span> · {t.role}
+                <span className="mx-auto mb-5 block h-px w-12 bg-[#2641FF]" />
+                <span className="font-semibold text-[#2641FF]">{t.name}</span> · {t.role}
               </footer>
             </motion.blockquote>
           </AnimatePresence>
@@ -100,7 +103,7 @@ export function Testimonials() {
           <button
             aria-label="Previous testimonial"
             onClick={prev}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 hover:bg-white hover:text-black"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-[#AEFF00]"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -131,7 +134,7 @@ export function Testimonials() {
           <button
             aria-label="Next testimonial"
             onClick={next}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 hover:bg-white hover:text-black"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition-colors hover:border-[#2641FF] hover:bg-[#2641FF] hover:text-[#AEFF00]"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
