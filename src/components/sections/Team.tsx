@@ -20,9 +20,9 @@ const team: Member[] = [
   },
   { name: "Rukshanda", role: "Video Editor", signature: sig("sig-rukshanda.webp") },
   { name: "Adhi", role: "Web Developer", signature: sig("sig-adhi.webp") },
-  { name: "Juhainah A", role: "Content & Project Manager", signature: sig("sig-juhainah.webp") },
-  { name: "Sanah", role: "Content Creation & Social Media Intern", signature: sig("sig-sanah.webp") },
-  { name: "Rifa", role: "Content Creation & Social Media Intern", signature: sig("sig-rifa.webp") },
+  { name: "Juhainah", role: "Content & Social Media", signature: sig("sig-juhainah.webp") },
+  { name: "Sanah", role: "Content & Social Media Intern", signature: sig("sig-sanah.webp") },
+  { name: "Rifa", role: "Content & Social Media Intern", signature: sig("sig-rifa.webp") },
 ];
 
 type Page =
