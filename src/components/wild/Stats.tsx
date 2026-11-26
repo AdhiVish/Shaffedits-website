@@ -45,7 +45,7 @@ function Stat({ value, suffix, label, i, phone }: { value: number; suffix: strin
 export function Stats() {
   const phone = useIsPhone();
   return (
-    <section className="bg-black px-6 py-16 text-white md:py-40">
+    <section id="stats" className="bg-black px-6 py-16 text-white md:py-40">
       <div className="mx-auto max-w-6xl">
         <p className="mb-4 text-xs font-medium uppercase md:mb-6 tracking-[0.4em] text-white/50">By the numbers</p>
         <h2 className="mb-8 max-w-3xl font-display md:mb-16 text-[clamp(2rem,5vw,4rem)] font-black leading-none tracking-tight">

@@ -9,6 +9,7 @@ import { Stats } from "@/components/wild/Stats";
 import { SelectedWork } from "@/components/wild/SelectedWork";
 import { WildClientele } from "@/components/wild/WildClientele";
 import { BigOutro } from "@/components/wild/BigOutro";
+import { ScrollRail } from "@/components/layout/ScrollRail";
 
 /**
  * The scroll-driven home page. Every section reacts to the scroll:
@@ -17,6 +18,7 @@ import { BigOutro } from "@/components/wild/BigOutro";
 export default function Home() {
   return (
     <>
+      <ScrollRail />
       <Hero />
       <ServiceBands />
       <WildServices />

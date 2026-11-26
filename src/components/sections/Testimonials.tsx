@@ -69,7 +69,7 @@ export function Testimonials() {
   }, []);
 
   return (
-    <section
+    <section id="reviews"
       ref={ref}
       className="bg-black px-6 py-28 text-white md:py-40"
     >

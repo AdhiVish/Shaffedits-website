@@ -41,7 +41,7 @@ function Logo({ name, file }: { name: string; file: string }) {
 export function WildClientele() {
   const half = Math.ceil(clients.length / 2);
   return (
-    <section className="overflow-hidden bg-white py-16 text-black md:py-32">
+    <section id="clients" data-rail-light className="overflow-hidden bg-white py-16 text-black md:py-32">
       <div className="mx-auto mb-10 md:mb-14 max-w-4xl px-6 text-center">
         <p className="mb-4 text-xs font-bold uppercase tracking-[0.4em] text-[#2641FF]">Clientele / 04</p>
         <h2 className="font-display text-[clamp(2rem,4.5vw,3.5rem)] font-black leading-none tracking-tight">
