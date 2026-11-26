@@ -32,16 +32,16 @@ type Card = {
 };
 
 const CARDS: Card[] = [
-  { src: "a01", pos: "left-[-2%] top-[9%]", w: "w-[26vw] md:w-[11vw]", rot: -7, depth: 34, fx: -1, fy: -1 },
-  { src: "a05", pos: "left-[2%] top-[39%]", w: "w-[24vw] md:w-[10vw]", rot: 4, depth: 52, fx: -1.3, fy: 0, desktopOnly: true },
-  { src: "a06", pos: "left-[7%] top-[66%]", w: "w-[26vw] md:w-[11vw]", rot: -4, depth: 40, fx: -1, fy: 1 },
-  { src: "a02", pos: "right-[-2%] top-[10%]", w: "w-[26vw] md:w-[11vw]", rot: 6, depth: 36, fx: 1, fy: -1 },
-  { src: "a08", pos: "right-[3%] top-[40%]", w: "w-[24vw] md:w-[10vw]", rot: -5, depth: 54, fx: 1.3, fy: 0, desktopOnly: true },
-  { src: "a07", pos: "right-[8%] top-[66%]", w: "w-[26vw] md:w-[11vw]", rot: 5, depth: 42, fx: 1, fy: 1 },
-  { src: "a03", pos: "left-[16%] top-[8%]", w: "md:w-[7vw]", rot: 8, depth: 14, fx: -0.6, fy: -1.4, far: true, desktopOnly: true },
-  { src: "a10", pos: "left-[22%] top-[80%]", w: "md:w-[8vw]", rot: -6, depth: 16, fx: -0.6, fy: 1.4, far: true, desktopOnly: true },
-  { src: "a04", pos: "right-[16%] top-[7%]", w: "md:w-[8vw]", rot: -7, depth: 14, fx: 0.6, fy: -1.4, far: true, desktopOnly: true },
-  { src: "a09", pos: "right-[22%] top-[80%]", w: "md:w-[7vw]", rot: 6, depth: 16, fx: 0.6, fy: 1.4, far: true, desktopOnly: true },
+  { src: "h01", pos: "left-[-2%] top-[9%]", w: "w-[26vw] md:w-[11vw]", rot: -7, depth: 34, fx: -1, fy: -1 },
+  { src: "h05", pos: "left-[2%] top-[39%]", w: "w-[24vw] md:w-[10vw]", rot: 4, depth: 52, fx: -1.3, fy: 0, desktopOnly: true },
+  { src: "h06", pos: "left-[7%] top-[66%]", w: "w-[26vw] md:w-[11vw]", rot: -4, depth: 40, fx: -1, fy: 1 },
+  { src: "h02", pos: "right-[-2%] top-[10%]", w: "w-[26vw] md:w-[11vw]", rot: 6, depth: 36, fx: 1, fy: -1 },
+  { src: "h08", pos: "right-[3%] top-[40%]", w: "w-[24vw] md:w-[10vw]", rot: -5, depth: 54, fx: 1.3, fy: 0, desktopOnly: true },
+  { src: "h07", pos: "right-[8%] top-[66%]", w: "w-[26vw] md:w-[11vw]", rot: 5, depth: 42, fx: 1, fy: 1 },
+  { src: "h03", pos: "left-[16%] top-[8%]", w: "md:w-[7vw]", rot: 8, depth: 14, fx: -0.6, fy: -1.4, far: true, desktopOnly: true },
+  { src: "h10", pos: "left-[22%] top-[80%]", w: "md:w-[8vw]", rot: -6, depth: 16, fx: -0.6, fy: 1.4, far: true, desktopOnly: true },
+  { src: "h04", pos: "right-[16%] top-[7%]", w: "md:w-[8vw]", rot: -7, depth: 14, fx: 0.6, fy: -1.4, far: true, desktopOnly: true },
+  { src: "h09", pos: "right-[22%] top-[80%]", w: "md:w-[7vw]", rot: 6, depth: 16, fx: 0.6, fy: 1.4, far: true, desktopOnly: true },
 ];
 
 function FloatingCard({ card, index, progress }: { card: Card; index: number; progress: MotionValue<number> }) {
