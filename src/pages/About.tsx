@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { SEOHead } from "@/components/services";
-import { EditSuite } from "@/components/about/EditSuite";
+import { AboutPage } from "@/components/about/AboutPage";
 
 /** Where the last click landed, so the page can open out of that exact spot (e.g. the navbar's About link). */
 const origin = { x: 50, y: 8 };
@@ -20,7 +20,7 @@ if (typeof window !== "undefined") {
 const EASE = [0.76, 0, 0.24, 1] as const;
 
 /**
- * The About page: an "edit suite" you scrub through by scrolling (see EditSuite).
+ * The About page: a quiet scroll-driven read with a few hover touches (see AboutPage).
  * Entering: the page opens in a circle from wherever you clicked.
  * Leaving: a black curtain with a neon edge sweeps up over it, then the next page appears.
  * Esc goes back home.
@@ -51,7 +51,7 @@ export default function About() {
         exit={{ opacity: 1, transition: { duration: 0.6 } }}
         transition={{ duration: 0.9, ease: EASE }}
       >
-        <EditSuite />
+        <AboutPage />
       </motion.div>
 
       {/* exit curtain: waits below the screen, sweeps up when the page leaves */}
