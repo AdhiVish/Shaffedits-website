@@ -5,17 +5,19 @@ import { GlowButton } from "@/components/ui/GlowButton";
 
 const INSTAGRAM_URL = "https://www.instagram.com/shaffedits/";
 
-// Seven photo cards, fanned out like a hand of cards. To add a real photo,
-// import it at the top of this file (e.g. `import post1 from "@/assets/socials/post-1.jpg";`)
-// and set `image: post1`. Cards without an image show a placeholder.
-const posts: { image?: string; alt: string }[] = [
-  { alt: "Instagram post 1" },
-  { alt: "Instagram post 2" },
-  { alt: "Instagram post 3" },
-  { alt: "Instagram post 4" },
-  { alt: "Instagram post 5" },
-  { alt: "Instagram post 6" },
-  { alt: "Instagram post 7" },
+const base = import.meta.env.BASE_URL;
+
+// Seven photo cards, fanned out like a hand of cards (files in public/socials/).
+// The middle card (post-4) is the Shaffedits poster; `contain` shows it whole
+// on a matching light background instead of cropping its logo.
+const posts: { image?: string; alt: string; contain?: string }[] = [
+  { image: `${base}socials/post-1.webp`, alt: "Cloud Apparels shirt mockup" },
+  { image: `${base}socials/post-2.webp`, alt: "Cricketeria app icon mockup" },
+  { image: `${base}socials/post-3.webp`, alt: "Behind the scenes at a Shaffedits shoot" },
+  { image: `${base}socials/post-4.webp`, alt: "Shaffedits — built on ideas, driven by creativity", contain: "#f9f9f9" },
+  { image: `${base}socials/post-5.webp`, alt: "Phone in hand showing our work" },
+  { image: `${base}socials/post-6.webp`, alt: "JR Dental Clinic ID card mockup" },
+  { image: `${base}socials/post-7.webp`, alt: "Lspace phone mockup" },
 ];
 
 // Card height / width — tall, phone-story shaped cards like an Instagram reel.
@@ -156,7 +158,13 @@ export function Socials() {
                 style={{ borderRadius: W * 0.16 }}
               >
                 {post.image ? (
-                  <img src={post.image} alt={post.alt} loading="lazy" className="h-full w-full object-cover" />
+                  <img
+                    src={post.image}
+                    alt={post.alt}
+                    loading="lazy"
+                    className={`h-full w-full ${post.contain ? "object-contain" : "object-cover"}`}
+                    style={post.contain ? { background: post.contain } : undefined}
+                  />
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_30%_15%,#262626_0%,#0b0b0b_70%)] text-white/25">
                     <Instagram className="h-6 w-6 md:h-9 md:w-9" aria-hidden />
