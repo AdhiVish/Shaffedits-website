@@ -11,7 +11,7 @@ type Member = { name: string; role: string; bio?: string; image?: string; signat
 // image path (transparent PNG/SVG) to use a real one instead.
 const sig = (f: string) => `${import.meta.env.BASE_URL}team/${f}`;
 
-const team: Member[] = [
+export const team: Member[] = [
   {
     name: "Mohammed Shafeeq",
     role: "Founder & Creative Director",
